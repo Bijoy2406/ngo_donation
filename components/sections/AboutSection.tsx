@@ -33,7 +33,7 @@ export default function AboutSection({ settings }: AboutSectionProps) {
               <span className="relative inline-flex rounded-full h-4 w-4 bg-sage-500" />
             </span>
           </div>
-          <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest">
+          <p className="section-kicker text-sage-600">
             About Us
           </p>
         </div>

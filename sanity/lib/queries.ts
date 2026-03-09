@@ -38,7 +38,6 @@ export async function getFeaturedEvents(): Promise<Event[]> {
     slug,
     shortDescription,
     thumbnail,
-    category,
     date
   }`);
 }
@@ -50,7 +49,6 @@ export async function getAllEvents(): Promise<Event[]> {
     slug,
     shortDescription,
     thumbnail,
-    category,
     date,
     featured
   }`);
@@ -66,7 +64,6 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
       description,
       thumbnail,
       gallery,
-      category,
       date
     }`,
     { slug }

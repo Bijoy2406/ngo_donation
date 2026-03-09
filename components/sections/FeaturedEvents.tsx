@@ -15,7 +15,7 @@ export default function FeaturedEvents({ events }: FeaturedEventsProps) {
         <ScrollReveal>
           <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest mb-1">
+              <p className="section-kicker text-sage-600 mb-1">
                 Events
               </p>
               <h2 className="text-[22px] md:text-[26px] font-bold text-sage-900">

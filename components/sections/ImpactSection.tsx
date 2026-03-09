@@ -68,7 +68,7 @@ export default function ImpactSection({ items }: ImpactSectionProps) {
       <div className="max-w-6xl mx-auto px-5">
         <ScrollReveal>
           <div className="text-center mb-10">
-            <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest mb-1">
+            <p className="section-kicker text-sage-600 mb-1 justify-center">
               Impact
             </p>
             <h2 className="text-[22px] md:text-[26px] font-bold text-sage-900">

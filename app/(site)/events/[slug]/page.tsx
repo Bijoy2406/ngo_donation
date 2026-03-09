@@ -57,11 +57,6 @@ export default async function EventDetailPage({
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 flex items-end">
           <div className="max-w-6xl mx-auto px-5 pb-8 w-full">
-            {event.category && (
-              <span className="inline-block bg-sage-500/90 text-white text-xs font-medium px-2.5 py-1 rounded-[4px] mb-3">
-                {event.category}
-              </span>
-            )}
             <h1 className="text-[22px] md:text-[34px] font-bold text-white leading-snug max-w-2xl no-select">
               {event.title}
             </h1>

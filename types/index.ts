@@ -48,7 +48,6 @@ export interface Event {
   description: PortableTextBlock[];
   thumbnail: CMSImage;
   gallery?: CMSImage[];
-  category: string;
   date: string;
   featured: boolean;
   featuredOrder?: number;

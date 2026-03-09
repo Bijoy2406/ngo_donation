@@ -25,11 +25,6 @@ export default function EventCard({ event }: EventCardProps) {
           draggable={false}
           sizes="(max-width: 768px) 100vw, 50vw"
         />
-        {event.category && (
-          <span className="absolute top-3 left-3 bg-sage-500/90 text-white text-xs font-medium px-2.5 py-1 rounded-[4px] z-10">
-            {event.category}
-          </span>
-        )}
       </div>
 
       {/* Content */}

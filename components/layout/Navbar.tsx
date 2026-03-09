@@ -29,21 +29,21 @@ export default function Navbar() {
   const logoClass = isScrolled ? "text-sage-800" : "text-white";
 
   return (
-    <nav
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 h-[60px] transition-all duration-300",
-        isScrolled
-          ? "bg-white/85 backdrop-blur-md shadow-sm border-b border-sage-100"
-          : "bg-white/10 backdrop-blur-sm"
-      )}
-    >
-      <div className="max-w-6xl mx-auto px-5 h-full flex items-center justify-between">
+    <nav className="fixed top-4 left-0 right-0 z-50 px-3 md:px-5">
+      <div
+        className={cn(
+          "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-300 px-5",
+          isScrolled
+            ? "bg-[#eef4ee]/92 border-sage-200 shadow-lg backdrop-blur-md"
+            : "bg-[#dce8df]/76 border-sage-300/60 backdrop-blur-sm"
+        )}
+      >
         {/* Logo */}
         <Link
           href="/"
           className={cn(
             "font-bold text-base tracking-tight transition-colors duration-300",
-            logoClass
+            isScrolled ? logoClass : "text-sage-900"
           )}
         >
           Farzana Afroz Foundation
@@ -57,7 +57,7 @@ export default function Navbar() {
               href={link.href}
               className={cn(
                 "text-sm font-medium transition-colors duration-300 hover:text-sage-400",
-                textClass
+                isScrolled ? textClass : "text-sage-800"
               )}
             >
               {link.label}
@@ -75,7 +75,7 @@ export default function Navbar() {
         <button
           className={cn(
             "md:hidden transition-colors duration-300",
-            textClass
+            isScrolled ? textClass : "text-sage-800"
           )}
           onClick={() => setIsMobileOpen(!isMobileOpen)}
           aria-label="Toggle menu"
@@ -86,7 +86,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {isMobileOpen && (
-        <div className="md:hidden absolute top-[60px] left-0 right-0 bg-white/95 backdrop-blur-md shadow-lg border-b border-sage-100">
+        <div className="md:hidden absolute top-[66px] left-3 right-3 rounded-[16px] bg-white/95 backdrop-blur-md shadow-lg border border-sage-200">
           <div className="flex flex-col px-5 py-4 gap-4">
             {navLinks.map((link) => (
               <Link

@@ -19,6 +19,11 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  background: #f9f4e8;
+  color: #1f3328;
+}
+
 * {
   -webkit-user-drag: none;
   /* user-drag is non-standard; handled via class */
@@ -48,6 +53,29 @@ img {
 /* Smooth section transitions */
 section {
   position: relative;
+}
+
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.section-kicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #0f6f68;
+  box-shadow: 0 0 0 5px rgba(15, 111, 104, 0.12);
+}
+
+.text-shadow-soft {
+  text-shadow: 0 4px 14px rgba(7, 48, 44, 0.28);
 }
 
 /* Portable text styles */

@@ -6,6 +6,7 @@ import DonationHighlight from "@/components/sections/DonationHighlight";
 import MissionSection from "@/components/sections/MissionSection";
 import ImpactSection from "@/components/sections/ImpactSection";
 import FAQSection from "@/components/sections/FAQSection";
+import ContactStrip from "@/components/sections/ContactStrip";
 import {
   getSiteSettings,
   getFeaturedEvents,
@@ -38,6 +39,7 @@ export default async function HomePage() {
       <MissionSection mission={mission} />
       <ImpactSection items={impactItems} />
       <FAQSection items={faqItems} />
+      <ContactStrip />
     </>
   );
 }

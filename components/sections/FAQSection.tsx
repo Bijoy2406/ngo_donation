@@ -86,7 +86,7 @@ export default function FAQSection({ items }: FAQSectionProps) {
       <div className="max-w-4xl mx-auto px-5">
         <ScrollReveal>
           <div className="text-right mb-8">
-            <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest mb-1">
+            <p className="section-kicker text-sage-600 mb-1">
               FAQ
             </p>
             <h2 className="text-[22px] md:text-[26px] font-bold text-sage-900">
@@ -96,7 +96,7 @@ export default function FAQSection({ items }: FAQSectionProps) {
         </ScrollReveal>
 
         <ScrollReveal delay={0.1}>
-          <div className="bg-white rounded-[8px] shadow-card px-6 divide-y-0">
+          <div className="bg-white rounded-[12px] shadow-xl px-6 divide-y-0 transition-all duration-300 hover:shadow-2xl">
             {displayItems.map((item) => (
               <FAQAccordionItem key={item._id} item={item} />
             ))}

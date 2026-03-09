@@ -29,8 +29,8 @@ export default async function EventsPage() {
             </ScrollReveal>
             <ScrollReveal delay={0.1} className="max-w-xs">
               <p className="text-sm text-gray-500 leading-relaxed text-right">
-                Explore our past and upcoming events. Filter by category to
-                find what matters to you.
+                Explore our past and upcoming events, organized by event name
+                so visitors can quickly find what they are looking for.
               </p>
             </ScrollReveal>
           </div>

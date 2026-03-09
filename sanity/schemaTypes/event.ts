@@ -52,22 +52,6 @@ export const event = defineType({
       of: [{ type: "image", options: { hotspot: true } }],
       options: { layout: "grid" },
     }),
-    defineField({
-      name: "category",
-      title: "Category",
-      type: "string",
-      options: {
-        list: [
-          "Education",
-          "Health",
-          "Environment",
-          "Community",
-          "Awareness",
-          "Relief",
-          "Other",
-        ],
-      },
-    }),
     defineField({ name: "date", title: "Event Date", type: "date" }),
     defineField({
       name: "featured",

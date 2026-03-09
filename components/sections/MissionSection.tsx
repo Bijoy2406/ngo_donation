@@ -36,7 +36,7 @@ export default function MissionSectionComp({ mission }: MissionSectionProps) {
 
           {/* Text */}
           <ScrollReveal direction="left" delay={0.1} className="flex-1">
-            <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest mb-2">
+            <p className="section-kicker text-sage-600 mb-2">
               Mission
             </p>
             <h2 className="text-[22px] md:text-[26px] font-bold text-sage-900 mb-5">
