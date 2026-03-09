@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sage-50: #f4f7f4;
+  --sage-100: #e4ede6;
+  --sage-200: #c5d8c8;
+  --sage-300: #9abfa0;
+  --sage-400: #84a98c;
+  --sage-500: #52796f;
+  --sage-600: #406657;
+  --sage-700: #345445;
+  --sage-800: #2a4437;
+  --sage-900: #1f3328;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  -webkit-user-drag: none;
+  /* user-drag is non-standard; handled via class */
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e8e8e8 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Smooth section transitions */
+section {
+  position: relative;
+}
+
+/* Portable text styles */
+.prose-content h2 {
+  @apply text-2xl font-bold text-sage-900 mt-6 mb-3;
+}
+
+.prose-content h3 {
+  @apply text-xl font-semibold text-sage-800 mt-5 mb-2;
+}
+
+.prose-content p {
+  @apply text-gray-600 leading-relaxed mb-4;
+}
+
+.prose-content strong {
+  @apply font-semibold text-sage-800;
+}
+
+/* Masonry gallery */
+.masonry-grid {
+  columns: 2;
+  column-gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .masonry-grid {
+    columns: 3;
+  }
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+
+/* Image overlay protection */
+.image-protected {
+  position: relative;
+}
+
+.image-protected::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: default;
+}
