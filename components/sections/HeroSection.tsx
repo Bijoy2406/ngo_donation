@@ -52,7 +52,9 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             draggable={false}
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-sage-900 via-sage-700 to-sage-500" />
+          <div className="absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-500 font-semibold text-2xl md:text-4xl no-select">
+            1920 x 1080
+          </div>
         )}
       </motion.div>
 

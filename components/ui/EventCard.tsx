@@ -9,22 +9,37 @@ interface EventCardProps {
 }
 
 export default function EventCard({ event }: EventCardProps) {
-  const imageUrl = event.thumbnail
-    ? urlFor(event.thumbnail).width(800).height(450).format("webp").quality(80).url()
-    : "/placeholder-landscape.svg";
+  // Check if image actually contains valid data from sanity or cloudinary
+  const hasImage = !!(
+    event.thumbnail &&
+    ((event.thumbnail._type === "cloudinary.asset" &&
+      (event.thumbnail.secure_url || event.thumbnail.url)) ||
+      (event.thumbnail._type !== "cloudinary.asset" && event.thumbnail.asset))
+  );
+
+  const imageUrl = hasImage
+    ? urlFor(event.thumbnail!).width(800).height(450).format("webp").quality(80).url()
+    : "";
 
   return (
     <article className="group bg-white rounded-[8px] shadow-card overflow-hidden hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 border border-transparent hover:border-sage-200">
-      {/* Image */}
-      <div className="relative aspect-video overflow-hidden image-protected">
-        <Image
-          src={imageUrl}
-          alt={event.title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-500 no-select"
-          draggable={false}
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
+      {/* Image Placeholder or Actual Image */}
+      <div className="relative aspect-video overflow-hidden image-protected bg-gray-200 flex flex-col items-center justify-center">
+        {hasImage ? (
+          <Image
+            src={imageUrl}
+            alt={event.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500 no-select"
+            draggable={false}
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-gray-400 no-select">
+            <span className="font-semibold text-xs tracking-wider uppercase mb-1">Event Image</span>
+            <span className="font-bold text-xl tracking-tight">800 x 450</span>
+          </div>
+        )}
       </div>
 
       {/* Content */}

@@ -124,3 +124,12 @@ section {
   z-index: 1;
   cursor: default;
 }
+
+/* Button Shine Animation */
+@keyframes shimmer-sweep {
+  0% { left: -100%; }
+  50%, 100% { left: 200%; }
+}
+.animate-shimmer-sweep {
+  animation: shimmer-sweep 3s infinite;
+}

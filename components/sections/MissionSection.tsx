@@ -9,9 +9,10 @@ interface MissionSectionProps {
 }
 
 export default function MissionSectionComp({ mission }: MissionSectionProps) {
-  const imageUrl = mission?.image
-    ? urlFor(mission.image).width(600).height(600).format("webp").quality(80).url()
-    : "/placeholder-square.svg";
+  const hasImage = !!mission?.image;
+  const imageUrl = hasImage
+    ? urlFor(mission!.image!).width(600).height(600).format("webp").quality(80).url()
+    : "";
 
   const heading = mission?.heading ?? "Our Mission";
   const hasDescription = mission?.description && mission.description.length > 0;
@@ -22,15 +23,19 @@ export default function MissionSectionComp({ mission }: MissionSectionProps) {
         <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-center">
           {/* Image */}
           <ScrollReveal direction="right" className="w-full md:w-[40%] shrink-0">
-            <div className="relative aspect-square rounded-[8px] overflow-hidden image-protected shadow-card">
-              <Image
-                src={imageUrl}
-                alt="Our Mission"
-                fill
-                className="object-cover no-select"
-                draggable={false}
-                sizes="(max-width: 768px) 100vw, 40vw"
-              />
+            <div className="relative aspect-square rounded-[8px] overflow-hidden image-protected shadow-card bg-gray-200 flex items-center justify-center">
+              {hasImage ? (
+                <Image
+                  src={imageUrl}
+                  alt="Our Mission"
+                  fill
+                  className="object-cover no-select"
+                  draggable={false}
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                />
+              ) : (
+                <span className="text-gray-400 font-bold text-2xl no-select">600 x 600</span>
+              )}
             </div>
           </ScrollReveal>
 

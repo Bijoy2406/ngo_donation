@@ -25,8 +25,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const textClass = isScrolled ? "text-sage-900" : "text-white";
-  const logoClass = isScrolled ? "text-sage-800" : "text-white";
+
 
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 px-3 md:px-5">
@@ -34,16 +33,16 @@ export default function Navbar() {
         className={cn(
           "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-300 px-5",
           isScrolled
-            ? "bg-[#eef4ee]/92 border-sage-200 shadow-lg backdrop-blur-md"
-            : "bg-[#dce8df]/76 border-sage-300/60 backdrop-blur-sm"
+            ? "bg-[#eef4ee]/95 border-sage-200 shadow-lg backdrop-blur-md"
+            : "bg-[#dce8df]/90 border-sage-300/80 shadow-md backdrop-blur-md"
         )}
       >
         {/* Logo */}
         <Link
           href="/"
           className={cn(
-            "font-bold text-base tracking-tight transition-colors duration-300",
-            isScrolled ? logoClass : "text-sage-900"
+            "font-bold text-base tracking-tight transition-colors duration-300 [text-shadow:_0_1px_2px_rgb(255_255_255_/_60%)]",
+            isScrolled ? "text-sage-800" : "text-sage-900"
           )}
         >
           Farzana Afroz Foundation
@@ -56,8 +55,8 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               className={cn(
-                "text-sm font-medium transition-colors duration-300 hover:text-sage-400",
-                isScrolled ? textClass : "text-sage-800"
+                "text-sm font-medium transition-colors duration-300 hover:text-sage-400 [text-shadow:_0_1px_2px_rgb(255_255_255_/_60%)]",
+                isScrolled ? "text-sage-900" : "text-sage-800"
               )}
             >
               {link.label}
@@ -65,17 +64,19 @@ export default function Navbar() {
           ))}
           <button
             onClick={openModal}
-            className="bg-sage-500 text-white text-sm font-semibold px-5 py-2 rounded-[8px] hover:bg-sage-600 transition-colors duration-200"
+            className="group relative overflow-hidden bg-sage-500 text-white text-sm font-semibold px-5 py-2 rounded-[8px] shadow-[0_4px_14px_0_rgb(82,121,111,0.39)] hover:shadow-[0_6px_20px_rgba(82,121,111,0.5)] hover:bg-sage-600 hover:-translate-y-[1px] transition-all duration-200 block"
           >
-            Donate Now
+            <span className="relative z-10">Donate Now</span>
+            {/* Glossy sweep animation */}
+            <div className="absolute top-0 -bottom-1 w-8 bg-white/20 -skew-x-[20deg] animate-shimmer-sweep pointer-events-none group-hover:hidden" />
           </button>
         </div>
 
         {/* Mobile Toggle */}
         <button
           className={cn(
-            "md:hidden transition-colors duration-300",
-            isScrolled ? textClass : "text-sage-800"
+            "md:hidden transition-colors duration-300 drop-shadow-[0_1px_2px_rgba(255,255,255,0.6)]",
+            isScrolled ? "text-sage-900" : "text-sage-800"
           )}
           onClick={() => setIsMobileOpen(!isMobileOpen)}
           aria-label="Toggle menu"
@@ -103,9 +104,11 @@ export default function Navbar() {
                 openModal();
                 setIsMobileOpen(false);
               }}
-              className="bg-sage-500 text-white text-sm font-semibold py-2.5 rounded-[8px] hover:bg-sage-600 transition-colors mt-1"
+              className="group relative overflow-hidden w-full bg-sage-500 text-white text-sm font-semibold py-2.5 rounded-[8px] mt-1 shadow-[0_4px_14px_0_rgb(82,121,111,0.39)] hover:shadow-[0_6px_20px_rgba(82,121,111,0.5)] hover:bg-sage-600 hover:-translate-y-[1px] transition-all duration-200 block"
             >
-              Donate Now
+              <span className="relative z-10">Donate Now</span>
+              {/* Glossy sweep animation */}
+              <div className="absolute top-0 -bottom-1 w-12 bg-white/20 -skew-x-[20deg] animate-shimmer-sweep pointer-events-none group-hover:hidden" />
             </button>
           </div>
         </div>

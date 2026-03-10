@@ -11,6 +11,7 @@ export const metadata = {
 };
 
 export default async function EventsPage() {
+  await new Promise((resolve) => setTimeout(resolve, 3000)); // Fake 3 second delay for loader verification
   const events = await getAllEvents();
 
   return (

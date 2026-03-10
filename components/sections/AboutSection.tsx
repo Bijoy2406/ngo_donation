@@ -21,18 +21,16 @@ export default function AboutSection({ settings }: AboutSectionProps) {
   const peopleEngaged = settings?.peopleEngaged ?? 0;
   const yearsActive = settings?.yearsActive ?? 0;
 
+  // Split heading to colorize the last word
+  const headingWords = heading.split(" ");
+  const lastWord = headingWords.pop();
+  const restOfHeading = headingWords.join(" ");
+
   return (
     <section id="about" className="py-[60px] bg-white">
       <div className="max-w-6xl mx-auto px-5">
         {/* Top label row */}
-        <div className="flex items-center justify-between mb-10">
-          {/* Animated pulse indicator */}
-          <div className="relative flex items-center gap-3">
-            <span className="relative flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sage-400 opacity-40" />
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-sage-500" />
-            </span>
-          </div>
+        <div className="mb-8">
           <p className="section-kicker text-sage-600">
             About Us
           </p>
@@ -44,8 +42,13 @@ export default function AboutSection({ settings }: AboutSectionProps) {
           <ScrollReveal direction="left">
             <div className="flex flex-col justify-between h-full gap-8">
               <div>
-                <h2 className="text-[22px] md:text-[26px] font-bold text-sage-900 leading-snug">
-                  {heading}
+                <h2 className="text-[32px] md:text-[42px] font-bold text-sage-900 leading-tight">
+                  {restOfHeading}{" "}
+                  {lastWord && (
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-sage-600 to-sage-400">
+                      {lastWord}
+                    </span>
+                  )}
                 </h2>
                 <Link
                   href="/team"
