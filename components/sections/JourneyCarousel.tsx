@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import useEmblaCarousel from "embla-carousel-react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { urlFor } from "@/sanity/lib/image";
 import ScrollReveal from "@/components/ui/ScrollReveal";
@@ -25,98 +24,160 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
       ? items
       : (placeholderItems as unknown as CarouselItem[]);
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: "start",
-    slidesToScroll: 1,
-  });
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+  // Minimum swipe distance (in pixels) to trigger a slide change
+  const minSwipeDistance = 50;
 
-  const onInit = useCallback(() => {
-    if (!emblaApi) return;
-    setScrollSnaps(emblaApi.scrollSnapList());
-  }, [emblaApi]);
+  const nextEvent = useCallback(() => {
+    setCurrentIdx((i) => (displayItems.length ? (i + 1) % displayItems.length : 0));
+  }, [displayItems.length]);
 
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
+  const prevEvent = useCallback(() => {
+    setCurrentIdx((i) =>
+      displayItems.length ? (i - 1 + displayItems.length) % displayItems.length : 0
+    );
+  }, [displayItems.length]);
 
   useEffect(() => {
-    if (!emblaApi) return;
-    onInit();
-    onSelect();
-    emblaApi.on("reInit", onInit);
-    emblaApi.on("select", onSelect);
-  }, [emblaApi, onInit, onSelect]);
+    if (isPaused || touchStart !== null) return;
+    if (displayItems.length < 2) return;
+    const id = setInterval(() => {
+      nextEvent();
+    }, 5500); // Autoplay 5.5s
+    return () => clearInterval(id);
+  }, [displayItems.length, isPaused, nextEvent]);
 
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (!displayItems.length) return;
+      if (e.key === "ArrowRight") nextEvent();
+      if (e.key === "ArrowLeft") prevEvent();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [displayItems.length, nextEvent, prevEvent]);
+
+  // Touch handlers for swipe support
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextEvent();
+    }
+    if (isRightSwipe) {
+      prevEvent();
+    }
+    
+    // Reset touch variables
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
 
   return (
-    <section className="py-[60px] bg-sage-50">
-      <div className="max-w-6xl mx-auto px-5">
+    <section className="py-[80px] bg-sage-50 relative overflow-hidden">
+      {/* Decorative Orbs (adapted from original code) */}
+      <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#c5d8c8]/40 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute bottom-0 -left-20 h-80 w-80 rounded-full bg-[#9abfa0]/30 blur-3xl" aria-hidden="true" />
+
+      <div className="relative z-10 max-w-6xl mx-auto px-5 w-full single-mode">
         <ScrollReveal>
-          <div className="flex items-end justify-between mb-8">
-            <div>
-              <p className="section-kicker text-sage-600 mb-1">
-                Gallery
-              </p>
-              <h2 className="text-[22px] md:text-[26px] font-bold text-sage-900">
-                Our Journey
-              </h2>
-            </div>
-            {/* Arrow Controls */}
-            <div className="flex gap-2">
-              <button
-                onClick={scrollPrev}
-                aria-label="Previous slide"
-                className="w-10 h-10 rounded-[8px] border border-sage-200 flex items-center justify-center text-sage-700 hover:bg-sage-500 hover:text-white hover:border-sage-500 transition-all duration-200"
-              >
-                <HiChevronLeft size={20} />
-              </button>
-              <button
-                onClick={scrollNext}
-                aria-label="Next slide"
-                className="w-10 h-10 rounded-[8px] border border-sage-200 flex items-center justify-center text-sage-700 hover:bg-sage-500 hover:text-white hover:border-sage-500 transition-all duration-200"
-              >
-                <HiChevronRight size={20} />
-              </button>
-            </div>
-          </div>
+          <header className="mb-8">
+            <p className="section-kicker text-sage-600 mb-2">
+              Gallery
+            </p>
+            <h2 className="text-[32px] md:text-[42px] font-bold text-sage-900 leading-tight">
+              Our <span className="bg-clip-text text-transparent bg-gradient-to-r from-sage-600 to-sage-400">Journey</span>
+            </h2>
+            <p className="text-sage-700 mt-2 text-base max-w-lg">
+              Hover over the image to pause the slideshow. Navigate through our moments using the arrows.
+            </p>
+          </header>
         </ScrollReveal>
 
-        {/* Carousel */}
-        <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex gap-4">
-            {displayItems.map((item) => {
-              const imageUrl = item.image
-                ? urlFor(item.image).width(900).height(506).format("webp").quality(80).url()
-                : "/placeholder-landscape.svg";
+        {/* Spotlight Carousel Wrapper */}
+        <ScrollReveal>
+          <div
+            className="group relative w-full aspect-[4/3] md:aspect-[21/9] rounded-[24px] overflow-hidden shadow-2xl bg-sage-200"
+            role="region"
+            aria-label="Journey Image Carousel"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onFocus={() => setIsPaused(true)}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                setIsPaused(false);
+              }
+            }}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
+            {displayItems.map((item, i) => {
+              const active = i === currentIdx;
+              const hasImage = !!item.image;
+              const imageUrl = hasImage
+                ? urlFor(item.image!).width(1600).height(800).format("webp").quality(85).url()
+                : "";
 
               return (
                 <div
                   key={item._id}
-                  className="flex-none w-[85%] sm:w-[55%] md:w-[40%] lg:w-[32%]"
+                  className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                    active ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
+                  }`}
+                  aria-hidden={!active}
                 >
-                  <div className="relative aspect-video rounded-[8px] overflow-hidden group cursor-default image-protected">
+                  {/* Background Image with slow zoom effect when active */}
+                  {hasImage ? (
                     <Image
                       src={imageUrl}
                       alt={item.heading}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500 no-select"
-                      draggable={false}
-                      sizes="(max-width: 640px) 85vw, (max-width: 1024px) 40vw, 32vw"
+                      priority={i === 0}
+                      className={`object-cover transition-transform duration-[8s] ease-out ${
+                        active ? "scale-105" : "scale-100"
+                      }`}
+                      sizes="(max-width: 1024px) 100vw, 1200px"
                     />
-                    {/* Overlay — visible on hover / tap */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <h3 className="text-white font-bold text-base leading-snug no-select">
+                  ) : (
+                    <div className={`absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-4xl md:text-5xl no-select transition-transform duration-[8s] ease-out ${active ? "scale-105" : "scale-100"}`}>
+                      1600 x 800
+                    </div>
+                  )}
+                  
+                  {/* Dark Gradient Overlay for text readability */}
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500 ${
+                    active ? "opacity-0 group-hover:opacity-100" : "opacity-0"
+                  }`} />
+
+                  {/* Text Details Overlay */}
+                  <div 
+                    className={`absolute inset-x-0 bottom-0 p-6 md:p-12 flex flex-col justify-end transform transition-all duration-500 ease-out ${
+                      active ? "translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100" : "translate-y-8 opacity-0"
+                    }`}
+                  >
+                    <div className="max-w-2xl">
+                      <h3 className="text-3xl md:text-5xl font-bold text-white mb-3 tracking-tight [text-shadow:_0_2px_10px_rgb(0_0_0_/_40%)]">
                         {item.heading}
                       </h3>
                       {item.subheading && (
-                        <p className="text-white/80 text-sm mt-0.5 no-select">
+                        <p className="text-white/90 text-lg md:text-xl font-medium leading-relaxed [text-shadow:_0_1px_5px_rgb(0_0_0_/_40%)]">
                           {item.subheading}
                         </p>
                       )}
@@ -125,20 +186,45 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
                 </div>
               );
             })}
+
+            {/* Arrow Controls (Sides) */}
+            <button
+              aria-label="Previous slide"
+              onClick={(e) => {
+                e.preventDefault();
+                prevEvent();
+              }}
+              disabled={displayItems.length < 2}
+              className="hidden lg:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-gray-500/40 bg-gray-800/60 backdrop-blur-md shadow-lg items-center justify-center text-white hover:bg-sage-600 hover:border-sage-600 transition-all duration-300 disabled:opacity-50 opacity-0 group-hover:opacity-100"
+            >
+              <HiChevronLeft size={24} />
+            </button>
+
+            <button
+              aria-label="Next slide"
+              onClick={(e) => {
+                e.preventDefault();
+                nextEvent();
+              }}
+              disabled={displayItems.length < 2}
+              className="hidden lg:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-gray-500/40 bg-gray-800/60 backdrop-blur-md shadow-lg items-center justify-center text-white hover:bg-sage-600 hover:border-sage-600 transition-all duration-300 disabled:opacity-50 opacity-0 group-hover:opacity-100"
+            >
+              <HiChevronRight size={24} />
+            </button>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Dot Indicators */}
-        <div className="flex justify-center gap-2 mt-5">
-          {scrollSnaps.map((_, i) => (
+        <div className="flex justify-center gap-2.5 mt-8">
+          {displayItems.map((_, i) => (
             <button
               key={i}
-              onClick={() => emblaApi?.scrollTo(i)}
+              onClick={() => setCurrentIdx(i)}
               aria-label={`Go to slide ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === selectedIndex
-                  ? "bg-sage-500 w-6"
-                  : "bg-sage-200 w-2 hover:bg-sage-300"
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === currentIdx
+                  ? "bg-sage-600 w-8"
+                  : "bg-sage-300 w-2.5 hover:bg-sage-400"
               }`}
             />
           ))}

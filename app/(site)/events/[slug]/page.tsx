@@ -32,6 +32,7 @@ export default async function EventDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  await new Promise((resolve) => setTimeout(resolve, 3000)); // Fake 3 second delay for loader verification
   const { slug } = await params;
   const event = await getEventBySlug(slug);
 

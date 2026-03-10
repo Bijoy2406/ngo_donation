@@ -85,12 +85,12 @@ export default function FAQSection({ items }: FAQSectionProps) {
     <section className="py-[60px] bg-sage-50">
       <div className="max-w-4xl mx-auto px-5">
         <ScrollReveal>
-          <div className="text-right mb-8">
-            <p className="section-kicker text-sage-600 mb-1">
+          <div className="text-center mb-8">
+            <p className="section-kicker text-sage-600 mb-1 justify-center">
               FAQ
             </p>
-            <h2 className="text-[22px] md:text-[26px] font-bold text-sage-900">
-              Frequently Asked Questions
+            <h2 className="text-[32px] md:text-[42px] font-bold text-sage-900 leading-tight">
+              Frequently Asked <span className="bg-clip-text text-transparent bg-gradient-to-r from-sage-600 to-sage-400">Questions</span>
             </h2>
           </div>
         </ScrollReveal>

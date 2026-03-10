@@ -1,7 +1,7 @@
 "use client";
 
 import { useDonationModal } from "@/lib/context/DonationModalContext";
-import { FaWhatsapp } from "react-icons/fa";
+//import { FaWhatsapp } from "react-icons/fa";
 import { HiHeart } from "react-icons/hi";
 import { cn } from "@/lib/utils";
 
@@ -18,19 +18,7 @@ export default function FloatingActions({ whatsapp }: FloatingActionsProps) {
 
   return (
     <div className="fixed bottom-6 right-5 z-50 flex flex-col gap-3 items-end">
-      {/* WhatsApp */}
-      <a
-        href={whatsappHref}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Chat on WhatsApp"
-        className={cn(
-          "flex items-center justify-center w-12 h-12 rounded-full shadow-card-hover",
-          "bg-[#25D366] text-white hover:scale-110 transition-transform duration-200"
-        )}
-      >
-        <FaWhatsapp size={22} />
-      </a>
+
 
       {/* Donate Now */}
       <button

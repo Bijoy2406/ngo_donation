@@ -18,8 +18,8 @@ export default function FeaturedEvents({ events }: FeaturedEventsProps) {
               <p className="section-kicker text-sage-600 mb-1">
                 Events
               </p>
-              <h2 className="text-[22px] md:text-[26px] font-bold text-sage-900">
-                Featured Events
+              <h2 className="text-[32px] md:text-[42px] font-bold text-sage-900 leading-tight">
+                Featured <span className="bg-clip-text text-transparent bg-gradient-to-r from-sage-600 to-sage-400">Events</span>
               </h2>
             </div>
             <Link

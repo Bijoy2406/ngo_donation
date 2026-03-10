@@ -71,25 +71,26 @@ export default function ImpactSection({ items }: ImpactSectionProps) {
             <p className="section-kicker text-sage-600 mb-1 justify-center">
               Impact
             </p>
-            <h2 className="text-[22px] md:text-[26px] font-bold text-sage-900">
-              Our Impact Areas
+            <h2 className="text-[32px] md:text-[42px] font-bold text-sage-900 leading-tight">
+              Our Impact <span className="bg-clip-text text-transparent bg-gradient-to-r from-sage-600 to-sage-400">Areas</span>
             </h2>
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 mt-6 md:mt-10">
           {displayItems.map((item, i) => {
-            const Icon = iconMap[item.icon] ?? HiHeart;
+            const stepNumber = String(i + 1).padStart(2, "0");
             return (
               <ScrollReveal key={item._id} delay={i * 0.08}>
-                <div className="bg-sage-50 rounded-[8px] p-6 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-sage-200">
-                  <div className="w-10 h-10 bg-sage-500/10 rounded-[8px] flex items-center justify-center mb-4">
-                    <Icon size={20} className="text-sage-600" />
+                <div className="relative bg-sage-50 rounded-[12px] p-6 lg:p-7 pt-10 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-sage-200 h-full flex flex-col group">
+                  <div className="absolute -top-5 left-6 bg-gradient-to-br from-sage-400 to-sage-600 text-white text-[15px] font-bold w-[46px] h-[40px] rounded-[12px] flex items-center justify-center transform group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-300">
+                    {stepNumber}
                   </div>
-                  <h3 className="font-bold text-sage-900 text-base mb-2">
+
+                  <h3 className="font-bold text-sage-900 text-[18px] mb-3 leading-snug">
                     {item.heading}
                   </h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">
+                  <p className="text-[14px] md:text-[15px] text-gray-600 leading-[1.7]">
                     {item.description}
                   </p>
                 </div>
