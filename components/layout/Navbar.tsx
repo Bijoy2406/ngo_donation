@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
 import { HiMenu, HiX } from "react-icons/hi";
-import { cn } from "@/lib/utils";
+import { cn, FAKE_DELAY_MS } from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -17,7 +18,22 @@ const navLinks = [
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const pathname = usePathname();
   const { openModal } = useDonationModal();
+
+  useEffect(() => {
+    // Skip skeleton entirely if delay is off
+    if (FAKE_DELAY_MS === 0) {
+      setIsLoading(false);
+      return;
+    }
+    
+    // Fake delay for loader verification matching the page delay
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), FAKE_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 40);
@@ -26,6 +42,37 @@ export default function Navbar() {
   }, []);
 
 
+
+  if (isLoading) {
+    return (
+      <nav className="fixed top-4 left-0 right-0 z-50 px-3 md:px-5">
+        <div
+          className={cn(
+            "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-300 px-5",
+            isScrolled
+              ? "bg-[#eef4ee]/95 border-sage-200 shadow-lg backdrop-blur-md"
+              : "bg-[#dce8df]/90 border-sage-300/80 shadow-md backdrop-blur-md"
+          )}
+        >
+          {/* Logo Skeleton */}
+          <div className="skeleton h-5 w-48 rounded" />
+
+          {/* Desktop Nav Skeleton */}
+          <div className="hidden md:flex items-center gap-7">
+            <div className="skeleton h-4 w-12 rounded" />
+            <div className="skeleton h-4 w-16 rounded" />
+            <div className="skeleton h-4 w-12 rounded" />
+            <div className="skeleton h-4 w-16 rounded" />
+            <div className="skeleton h-4 w-20 rounded" />
+            <div className="skeleton h-9 w-[112px] rounded-[8px]" />
+          </div>
+
+          {/* Mobile Toggle Skeleton */}
+          <div className="md:hidden skeleton h-6 w-6 rounded" />
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 px-3 md:px-5">

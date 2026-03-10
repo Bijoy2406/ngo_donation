@@ -15,11 +15,12 @@ import {
   getImpactItems,
   getFAQItems,
 } from "@/sanity/lib/queries";
+import { simulateDelay } from "@/lib/utils";
 
 export const revalidate = 3600;
 
 export default async function HomePage() {
-  await new Promise((resolve) => setTimeout(resolve, 3000)); // Fake 3 second delay for loader verification
+  await simulateDelay();
 
   const [settings, featuredEvents, carouselItems, mission, impactItems, faqItems] =
     await Promise.all([

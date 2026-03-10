@@ -2,6 +2,7 @@ import TeamCard from "@/components/ui/TeamCard";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { SkeletonCard } from "@/components/ui/SkeletonCard";
 import { getTeamMembers } from "@/sanity/lib/queries";
+import { simulateDelay } from "@/lib/utils";
 
 export const revalidate = 3600;
 
@@ -12,7 +13,7 @@ export const metadata = {
 };
 
 export default async function TeamPage() {
-  await new Promise((resolve) => setTimeout(resolve, 3000)); // Fake 3 second delay for loader verification
+  await simulateDelay();
   const members = await getTeamMembers();
 
   return (
