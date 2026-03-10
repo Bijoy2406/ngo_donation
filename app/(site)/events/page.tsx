@@ -1,6 +1,7 @@
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import EventsClientUI from "@/components/events/EventsClientUI";
 import { getAllEvents } from "@/sanity/lib/queries";
+import { simulateDelay } from "@/lib/utils";
 
 export const revalidate = 3600;
 
@@ -11,7 +12,7 @@ export const metadata = {
 };
 
 export default async function EventsPage() {
-  await new Promise((resolve) => setTimeout(resolve, 3000)); // Fake 3 second delay for loader verification
+  await simulateDelay();
   const events = await getAllEvents();
 
   return (

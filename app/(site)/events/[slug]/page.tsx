@@ -3,7 +3,7 @@ import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import { urlFor } from "@/sanity/lib/image";
 import { getEventBySlug, getAllEvents } from "@/sanity/lib/queries";
-import { formatDate } from "@/lib/utils";
+import { formatDate, simulateDelay } from "@/lib/utils";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export const revalidate = 3600;
@@ -32,7 +32,7 @@ export default async function EventDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  await new Promise((resolve) => setTimeout(resolve, 3000)); // Fake 3 second delay for loader verification
+  await simulateDelay();
   const { slug } = await params;
   const event = await getEventBySlug(slug);
 
