@@ -5,12 +5,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
 import { HiMenu, HiX } from "react-icons/hi";
-import { cn, FAKE_DELAY_MS } from "@/lib/utils";
+import {
+  cn,
+  DONATE_NOW_BUTTON_CLASS,
+  DONATE_NOW_LABEL_CLASS,
+  FAKE_DELAY_MS,
+} from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/#about", label: "About Us" },
   { href: "/events", label: "Events" },
+  { href: "/team", label: "Team" },
   { href: "/#mission", label: "Mission" },
   { href: "/contact", label: "Contact Us" },
 ];
@@ -19,6 +25,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState<string>("");
   const pathname = usePathname();
   const { openModal } = useDonationModal();
 
@@ -41,6 +48,71 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (pathname !== "/") {
+      setActiveSection("");
+      return;
+    }
+
+    const sectionIds = ["about", "mission"];
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    const getCurrentHash = () => window.location.hash.replace("#", "");
+
+    const syncSectionFromHash = () => {
+      const hash = getCurrentHash();
+      if (hash) {
+        setActiveSection(hash);
+      }
+    };
+
+    syncSectionFromHash();
+    window.addEventListener("hashchange", syncSectionFromHash);
+
+    if (sections.length === 0) {
+      return () => window.removeEventListener("hashchange", syncSectionFromHash);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visibleEntry) {
+          setActiveSection(visibleEntry.target.id);
+        } else if (window.scrollY < 120 && !getCurrentHash()) {
+          setActiveSection("");
+        }
+      },
+      {
+        threshold: [0.35, 0.6],
+        rootMargin: "-20% 0px -40% 0px",
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => {
+      window.removeEventListener("hashchange", syncSectionFromHash);
+      observer.disconnect();
+    };
+  }, [pathname]);
+
+  const isActiveLink = (href: string) => {
+    if (href === "/") {
+      return pathname === "/" && activeSection === "";
+    }
+
+    if (href.startsWith("/#")) {
+      return pathname === "/" && activeSection === href.slice(2);
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
 
 
   if (isLoading) {
@@ -50,8 +122,8 @@ export default function Navbar() {
           className={cn(
             "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-300 px-5",
             isScrolled
-              ? "bg-[#eef4ee]/95 border-sage-200 shadow-lg backdrop-blur-md"
-              : "bg-[#dce8df]/90 border-sage-300/80 shadow-md backdrop-blur-md"
+              ? "bg-[#eef4ee]/95 border-sage-200 shadow-[0_16px_36px_rgba(17,42,35,0.26)] backdrop-blur-md"
+              : "bg-[#dce8df]/90 border-sage-300/80 shadow-[0_10px_24px_rgba(17,42,35,0.22)] backdrop-blur-md"
           )}
         >
           {/* Logo Skeleton */}
@@ -80,8 +152,8 @@ export default function Navbar() {
         className={cn(
           "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-300 px-5",
           isScrolled
-            ? "bg-[#eef4ee]/95 border-sage-200 shadow-lg backdrop-blur-md"
-            : "bg-[#dce8df]/90 border-sage-300/80 shadow-md backdrop-blur-md"
+            ? "bg-[#eef4ee]/95 border-sage-200 shadow-[0_16px_36px_rgba(17,42,35,0.26)] backdrop-blur-md"
+            : "bg-[#dce8df]/90 border-sage-300/80 shadow-[0_10px_24px_rgba(17,42,35,0.22)] backdrop-blur-md"
         )}
       >
         {/* Logo */}
@@ -102,8 +174,12 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               className={cn(
-                "text-sm font-medium transition-colors duration-300 hover:text-sage-400 [text-shadow:_0_1px_2px_rgb(255_255_255_/_60%)]",
-                isScrolled ? "text-sage-900" : "text-sage-800"
+                "relative text-sm font-medium transition-colors duration-300 [text-shadow:_0_1px_2px_rgb(255_255_255_/_60%)] after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:rounded-full after:bg-sage-600 after:transition-transform after:duration-300 hover:text-sage-500 hover:after:scale-x-100",
+                isActiveLink(link.href)
+                  ? "text-sage-700 after:scale-x-100"
+                  : isScrolled
+                  ? "text-sage-900"
+                  : "text-sage-800"
               )}
             >
               {link.label}
@@ -111,9 +187,9 @@ export default function Navbar() {
           ))}
           <button
             onClick={openModal}
-            className="group relative overflow-hidden bg-sage-500 text-white text-sm font-semibold px-5 py-2 rounded-[8px] shadow-[0_4px_14px_0_rgb(82,121,111,0.39)] hover:shadow-[0_6px_20px_rgba(82,121,111,0.5)] hover:bg-sage-600 hover:-translate-y-[1px] transition-all duration-200 block"
+            className={cn(DONATE_NOW_BUTTON_CLASS, "block")}
           >
-            <span className="relative z-10">Donate Now</span>
+            <span className={DONATE_NOW_LABEL_CLASS}>Donate Now</span>
             {/* Glossy sweep animation */}
             <div className="absolute top-0 -bottom-1 w-8 bg-white/20 -skew-x-[20deg] animate-shimmer-sweep pointer-events-none group-hover:hidden" />
           </button>
@@ -140,7 +216,12 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-sage-800 hover:text-sage-500 transition-colors py-1"
+                className={cn(
+                  "text-sm font-medium transition-colors py-1",
+                  isActiveLink(link.href)
+                    ? "text-sage-700"
+                    : "text-sage-800 hover:text-sage-500"
+                )}
                 onClick={() => setIsMobileOpen(false)}
               >
                 {link.label}
@@ -151,9 +232,9 @@ export default function Navbar() {
                 openModal();
                 setIsMobileOpen(false);
               }}
-              className="group relative overflow-hidden w-full bg-sage-500 text-white text-sm font-semibold py-2.5 rounded-[8px] mt-1 shadow-[0_4px_14px_0_rgb(82,121,111,0.39)] hover:shadow-[0_6px_20px_rgba(82,121,111,0.5)] hover:bg-sage-600 hover:-translate-y-[1px] transition-all duration-200 block"
+              className={cn(DONATE_NOW_BUTTON_CLASS, "mt-1 w-full py-2.5")}
             >
-              <span className="relative z-10">Donate Now</span>
+              <span className={DONATE_NOW_LABEL_CLASS}>Donate Now</span>
               {/* Glossy sweep animation */}
               <div className="absolute top-0 -bottom-1 w-12 bg-white/20 -skew-x-[20deg] animate-shimmer-sweep pointer-events-none group-hover:hidden" />
             </button>
