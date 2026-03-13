@@ -27,7 +27,7 @@ export default function AboutSection({ settings }: AboutSectionProps) {
   const restOfHeading = headingWords.join(" ");
 
   return (
-    <section id="about" className="py-[60px] bg-white">
+    <section id="about" className="scroll-mt-28 py-[60px] bg-white">
       <div className="max-w-6xl mx-auto px-5">
         {/* Top label row */}
         <div className="mb-8">

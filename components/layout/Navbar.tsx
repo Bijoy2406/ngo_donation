@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, type MouseEvent } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
@@ -21,13 +22,140 @@ const navLinks = [
   { href: "/contact", label: "Contact Us" },
 ];
 
+type HomeSection = "about" | "mission";
+
+const NAV_SCROLL_OFFSET = 108;
+const SECTION_PROBE_OFFSET = 24;
+const SCROLL_ACTIVE_SYNC_DELAY_MS = 90;
+const NAV_PILL_TRANSITION = {
+  type: "spring" as const,
+  stiffness: 210,
+  damping: 32,
+  mass: 1,
+};
+
+const isHomeSection = (value: string): value is HomeSection =>
+  value === "about" || value === "mission";
+
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState<string>("");
+  const [activeSection, setActiveSection] = useState<HomeSection | "">("");
+  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
+  const pendingActiveSectionRef = useRef<HomeSection | "" | null>(null);
+  const activeSectionTimerRef = useRef<number | null>(null);
   const pathname = usePathname();
   const { openModal } = useDonationModal();
+
+  const clearActiveSectionTimer = () => {
+    if (activeSectionTimerRef.current !== null) {
+      window.clearTimeout(activeSectionTimerRef.current);
+      activeSectionTimerRef.current = null;
+    }
+
+    pendingActiveSectionRef.current = null;
+  };
+
+  const setActiveSectionImmediate = (section: HomeSection | "") => {
+    clearActiveSectionTimer();
+    setActiveSection(section);
+  };
+
+  const queueActiveSectionFromScroll = (section: HomeSection | "") => {
+    pendingActiveSectionRef.current = section;
+
+    if (activeSectionTimerRef.current !== null) {
+      return;
+    }
+
+    activeSectionTimerRef.current = window.setTimeout(() => {
+      activeSectionTimerRef.current = null;
+      const nextSection = pendingActiveSectionRef.current;
+      pendingActiveSectionRef.current = null;
+
+      if (nextSection !== null) {
+        setActiveSection((currentSection) =>
+          currentSection === nextSection ? currentSection : nextSection
+        );
+      }
+    }, SCROLL_ACTIVE_SYNC_DELAY_MS);
+  };
+
+  const scrollToHomeSection = (section: HomeSection, behavior: ScrollBehavior) => {
+    const sectionEl = document.getElementById(section);
+
+    if (!sectionEl) {
+      return false;
+    }
+
+    const sectionTop = sectionEl.getBoundingClientRect().top + window.scrollY;
+
+    window.scrollTo({
+      top: Math.max(0, sectionTop - NAV_SCROLL_OFFSET),
+      behavior,
+    });
+
+    return true;
+  };
+
+  const getActiveSectionFromScroll = (): HomeSection | "" => {
+    const aboutSection = document.getElementById("about");
+    const missionSection = document.getElementById("mission");
+
+    if (!aboutSection || !missionSection) {
+      return "";
+    }
+
+    const probeY = window.scrollY + NAV_SCROLL_OFFSET + SECTION_PROBE_OFFSET;
+    const aboutTop = aboutSection.offsetTop;
+    const aboutBottom = aboutTop + aboutSection.offsetHeight;
+    const missionTop = missionSection.offsetTop;
+    const missionBottom = missionTop + missionSection.offsetHeight;
+
+    if (probeY >= aboutTop && probeY < missionTop && probeY < aboutBottom) {
+      return "about";
+    }
+
+    if (probeY >= missionTop && probeY < missionBottom) {
+      return "mission";
+    }
+
+    return "";
+  };
+
+  const handleNavLinkClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    setIsMobileOpen(false);
+
+    if (pathname !== "/") {
+      return;
+    }
+
+    if (href === "/") {
+      event.preventDefault();
+      setActiveSectionImmediate("");
+      window.history.replaceState(null, "", "/");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (!href.startsWith("/#")) {
+      return;
+    }
+
+    const section = href.slice(2);
+
+    if (!isHomeSection(section)) {
+      return;
+    }
+
+    event.preventDefault();
+    setActiveSectionImmediate(section);
+
+    if (scrollToHomeSection(section, "smooth")) {
+      window.history.replaceState(null, "", `/#${section}`);
+    }
+  };
 
   useEffect(() => {
     // Skip skeleton entirely if delay is off
@@ -44,60 +172,78 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 40);
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     if (pathname !== "/") {
-      setActiveSection("");
+      setActiveSectionImmediate("");
       return;
     }
 
-    const sectionIds = ["about", "mission"];
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => Boolean(el));
+    let frameId: number | null = null;
+    let hashSyncTimer: number | null = null;
+    const syncActiveSection = (immediate = false) => {
+      const section = getActiveSectionFromScroll();
 
-    const getCurrentHash = () => window.location.hash.replace("#", "");
-
-    const syncSectionFromHash = () => {
-      const hash = getCurrentHash();
-      if (hash) {
-        setActiveSection(hash);
+      if (immediate) {
+        setActiveSectionImmediate(section);
+        return;
       }
+
+      queueActiveSectionFromScroll(section);
     };
 
-    syncSectionFromHash();
-    window.addEventListener("hashchange", syncSectionFromHash);
+    const handleScroll = () => {
+      if (frameId !== null) {
+        return;
+      }
 
-    if (sections.length === 0) {
-      return () => window.removeEventListener("hashchange", syncSectionFromHash);
+      frameId = window.requestAnimationFrame(() => {
+        syncActiveSection();
+        frameId = null;
+      });
+    };
+
+    const handleResize = () => syncActiveSection(true);
+
+    syncActiveSection(true);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+
+    const hash = window.location.hash.replace("#", "");
+
+    if (isHomeSection(hash)) {
+      const alignToHash = (attempt = 0) => {
+        const didScroll = scrollToHomeSection(hash, attempt === 0 ? "auto" : "smooth");
+
+        if (didScroll) {
+          setActiveSectionImmediate(hash);
+          return;
+        }
+
+        if (attempt < 8) {
+          hashSyncTimer = window.setTimeout(() => alignToHash(attempt + 1), 120);
+        }
+      };
+
+      alignToHash();
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (visibleEntry) {
-          setActiveSection(visibleEntry.target.id);
-        } else if (window.scrollY < 120 && !getCurrentHash()) {
-          setActiveSection("");
-        }
-      },
-      {
-        threshold: [0.35, 0.6],
-        rootMargin: "-20% 0px -40% 0px",
-      }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
     return () => {
-      window.removeEventListener("hashchange", syncSectionFromHash);
-      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      clearActiveSectionTimer();
+
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+
+      if (hashSyncTimer !== null) {
+        window.clearTimeout(hashSyncTimer);
+      }
     };
   }, [pathname]);
 
@@ -152,8 +298,8 @@ export default function Navbar() {
         className={cn(
           "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-300 px-5",
           isScrolled
-            ? "bg-[#eef4ee]/95 border-sage-200 shadow-[0_16px_36px_rgba(17,42,35,0.26)] backdrop-blur-md"
-            : "bg-[#dce8df]/90 border-sage-300/80 shadow-[0_10px_24px_rgba(17,42,35,0.22)] backdrop-blur-md"
+            ? "bg-[#eef4ee]/95 border-sage-200 shadow-lg backdrop-blur-md"
+              : "bg-[#dce8df]/90 border-sage-300/80 shadow-md backdrop-blur-md"
         )}
       >
         {/* Logo */}
@@ -168,23 +314,47 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-7">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "relative text-sm font-medium transition-colors duration-300 [text-shadow:_0_1px_2px_rgb(255_255_255_/_60%)] after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:rounded-full after:bg-sage-600 after:transition-transform after:duration-300 hover:text-sage-500 hover:after:scale-x-100",
-                isActiveLink(link.href)
-                  ? "text-sage-700 after:scale-x-100"
-                  : isScrolled
-                  ? "text-sage-900"
-                  : "text-sage-800"
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+        <div
+          className="hidden md:flex items-center gap-7"
+          onMouseLeave={() => setHoveredHref(null)}
+        >
+          {navLinks.map((link) => {
+            const isActive = isActiveLink(link.href);
+            const showHoverPill = hoveredHref === link.href && !isActive;
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={(event) => handleNavLinkClick(event, link.href)}
+                onMouseEnter={() => setHoveredHref(link.href)}
+                className={cn(
+                  "relative z-0 px-2 py-1 text-sm font-medium transition-all duration-500 ease-out",
+                  isActive
+                    ? "text-white"
+                    : isScrolled
+                    ? "text-sage-900 hover:text-sage-700"
+                    : "text-sage-800 hover:text-sage-700"
+                )}
+              >
+                {showHoverPill && (
+                  <motion.span
+                    layoutId="desktop-nav-hover-pill"
+                    transition={NAV_PILL_TRANSITION}
+                    className="absolute inset-x-[-10px] inset-y-[-6px] rounded-full border border-white/45 bg-white/30 shadow-[0_8px_18px_rgba(222,236,230,0.5)] backdrop-blur-[4px]"
+                  />
+                )}
+                {isActive && (
+                  <motion.span
+                    layoutId="desktop-nav-active-pill"
+                    transition={NAV_PILL_TRANSITION}
+                    className="absolute inset-x-[-10px] inset-y-[-6px] rounded-full bg-gradient-to-b from-sage-600 to-sage-700 ring-1 ring-sage-500/90 shadow-[0_8px_18px_rgba(34,98,78,0.45)]"
+                  />
+                )}
+                <span className="relative z-10">{link.label}</span>
+              </Link>
+            );
+          })}
           <button
             onClick={openModal}
             className={cn(DONATE_NOW_BUTTON_CLASS, "block")}
@@ -212,21 +382,42 @@ export default function Navbar() {
       {isMobileOpen && (
         <div className="md:hidden absolute top-[66px] left-3 right-3 rounded-[16px] bg-white/95 backdrop-blur-md shadow-lg border border-sage-200">
           <div className="flex flex-col px-5 py-4 gap-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "text-sm font-medium transition-colors py-1",
-                  isActiveLink(link.href)
-                    ? "text-sage-700"
-                    : "text-sage-800 hover:text-sage-500"
-                )}
-                onClick={() => setIsMobileOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = isActiveLink(link.href);
+              const showHoverPill = hoveredHref === link.href && !isActive;
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "relative rounded-full px-3 py-2 text-sm font-medium transition-colors",
+                    isActive
+                      ? "text-white"
+                      : "text-sage-800 hover:bg-sage-50 hover:text-sage-600"
+                  )}
+                  onClick={(event) => handleNavLinkClick(event, link.href)}
+                  onMouseEnter={() => setHoveredHref(link.href)}
+                  onMouseLeave={() => setHoveredHref((current) => (current === link.href ? null : current))}
+                >
+                  {showHoverPill && (
+                    <motion.span
+                      layoutId="mobile-nav-hover-pill"
+                      transition={NAV_PILL_TRANSITION}
+                      className="absolute inset-0 rounded-full border border-white/45 bg-white/35 shadow-[0_8px_18px_rgba(222,236,230,0.45)] backdrop-blur-[4px]"
+                    />
+                  )}
+                  {isActive && (
+                    <motion.span
+                      layoutId="mobile-nav-active-pill"
+                      transition={NAV_PILL_TRANSITION}
+                      className="absolute inset-0 rounded-full bg-gradient-to-b from-sage-600 to-sage-700 ring-1 ring-sage-500/90 shadow-[0_8px_18px_rgba(34,98,78,0.4)]"
+                    />
+                  )}
+                  <span className="relative z-10">{link.label}</span>
+                </Link>
+              );
+            })}
             <button
               onClick={() => {
                 openModal();
