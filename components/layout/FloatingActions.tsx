@@ -2,8 +2,11 @@
 
 import { useDonationModal } from "@/lib/context/DonationModalContext";
 //import { FaWhatsapp } from "react-icons/fa";
-import { HiHeart } from "react-icons/hi";
-import { cn } from "@/lib/utils";
+import {
+  cn,
+  DONATE_NOW_BUTTON_CLASS,
+  DONATE_NOW_LABEL_CLASS,
+} from "@/lib/utils";
 
 interface FloatingActionsProps {
   whatsapp?: string | null;
@@ -12,9 +15,7 @@ interface FloatingActionsProps {
 export default function FloatingActions({ whatsapp }: FloatingActionsProps) {
   const { openModal } = useDonationModal();
 
-  const whatsappHref = whatsapp
-    ? `https://wa.me/${whatsapp.replace(/\D/g, "")}`
-    : "https://wa.me/";
+  void whatsapp;
 
   return (
     <div className="fixed bottom-6 right-5 z-50 flex flex-col gap-3 items-end">
@@ -25,12 +26,12 @@ export default function FloatingActions({ whatsapp }: FloatingActionsProps) {
         onClick={openModal}
         aria-label="Donate Now"
         className={cn(
-          "flex items-center gap-2 bg-sage-500 text-white text-sm font-semibold",
-          "px-4 h-12 rounded-full shadow-card-hover hover:bg-sage-600 hover:scale-105 transition-all duration-200"
+          DONATE_NOW_BUTTON_CLASS,
+          "h-12 rounded-full px-5 hover:scale-105"
         )}
       >
-        <HiHeart size={16} />
-        <span className="hidden sm:inline">Donate Now</span>
+        <span className={DONATE_NOW_LABEL_CLASS}>Donate Now</span>
+        <div className="absolute top-0 -bottom-1 w-10 bg-white/20 -skew-x-[20deg] animate-shimmer-sweep pointer-events-none" />
       </button>
     </div>
   );
