@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
+import { cn, DONATE_NOW_BUTTON_CLASS, DONATE_NOW_LABEL_CLASS } from "@/lib/utils";
 import { urlFor } from "@/sanity/lib/image";
 import type { SiteSettings } from "@/types";
 
@@ -95,9 +96,12 @@ export default function HeroSection({ settings }: HeroSectionProps) {
           >
             <button
               onClick={openModal}
-              className="bg-sage-500 hover:bg-sage-400 text-white font-semibold text-sm px-8 py-3.5 rounded-[8px] hover:scale-105 transition-all duration-200 shadow-lg"
+              className={cn(
+                DONATE_NOW_BUTTON_CLASS,
+                "px-8 py-3.5 hover:scale-105 border border-white/70 shadow-[0_0_0_1px_rgba(255,255,255,0.35),0_0_20px_rgba(255,255,255,0.32),0_12px_30px_rgba(24,58,50,0.55)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_0_26px_rgba(255,255,255,0.42),0_14px_34px_rgba(24,58,50,0.6)]"
+              )}
             >
-              Donate Now
+              <span className={DONATE_NOW_LABEL_CLASS}>Donate Now</span>
             </button>
           </motion.div>
         </motion.div>

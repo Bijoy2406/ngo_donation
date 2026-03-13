@@ -3,6 +3,7 @@
 import Link from "next/link";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
+import { cn, DONATE_NOW_BUTTON_CLASS, DONATE_NOW_LABEL_CLASS } from "@/lib/utils";
 
 export default function DonationHighlight() {
   const { openModal } = useDonationModal();
@@ -34,9 +35,12 @@ export default function DonationHighlight() {
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={openModal}
-                className="bg-white text-[#0b5f59] text-sm font-bold px-7 py-3 rounded-[10px] transition-all shadow-lg hover:shadow-2xl hover:-translate-y-0.5 duration-300"
+                className={cn(
+                  DONATE_NOW_BUTTON_CLASS,
+                  "px-7 py-3 hover:-translate-y-0.5 duration-300"
+                )}
               >
-                Donate Now
+                <span className={DONATE_NOW_LABEL_CLASS}>Donate Now</span>
               </button>
               <Link
                 href="/contact"

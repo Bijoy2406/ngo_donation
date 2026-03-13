@@ -18,7 +18,7 @@ export default function MissionSectionComp({ mission }: MissionSectionProps) {
   const hasDescription = mission?.description && mission.description.length > 0;
 
   return (
-    <section id="mission" className="scroll-mt-24 py-[60px] bg-sage-50">
+    <section id="mission" className="scroll-mt-28 py-[60px] bg-sage-50">
       <div className="max-w-6xl mx-auto px-5">
         <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-center">
           {/* Image */}

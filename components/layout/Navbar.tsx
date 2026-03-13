@@ -1,137 +1,160 @@
 "use client";
 
 import { useState, useEffect, useRef, type MouseEvent } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
 import { HiMenu, HiX } from "react-icons/hi";
-import { cn, FAKE_DELAY_MS } from "@/lib/utils";
+import {
+  cn,
+  DONATE_NOW_BUTTON_CLASS,
+  DONATE_NOW_LABEL_CLASS,
+  FAKE_DELAY_MS,
+} from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/#about", label: "About Us" },
   { href: "/events", label: "Events" },
+  { href: "/team", label: "Team" },
   { href: "/#mission", label: "Mission" },
   { href: "/contact", label: "Contact Us" },
 ];
+
+type HomeSection = "about" | "mission";
+
+const NAV_SCROLL_OFFSET = 108;
+const SECTION_PROBE_OFFSET = 24;
+const SCROLL_ACTIVE_SYNC_DELAY_MS = 90;
+const NAV_PILL_TRANSITION = {
+  type: "spring" as const,
+  stiffness: 210,
+  damping: 32,
+  mass: 1,
+};
+
+const isHomeSection = (value: string): value is HomeSection =>
+  value === "about" || value === "mission";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentHash, setCurrentHash] = useState("");
-  const [activeIndicator, setActiveIndicator] = useState({
-    left: 0,
-    width: 0,
-    visible: false,
-  });
-  const navRef = useRef<HTMLElement | null>(null);
-  const desktopLinksRef = useRef<Record<string, HTMLAnchorElement | null>>({});
-  const desktopLinksWrapRef = useRef<HTMLDivElement | null>(null);
+  const [activeSection, setActiveSection] = useState<HomeSection | "">("");
+  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
+  const pendingActiveSectionRef = useRef<HomeSection | "" | null>(null);
+  const activeSectionTimerRef = useRef<number | null>(null);
   const pathname = usePathname();
-  const router = useRouter();
   const { openModal } = useDonationModal();
 
-  const getNavOffset = () => {
-    const navHeight = navRef.current?.getBoundingClientRect().height ?? 60;
-    return Math.round(navHeight + 20);
+  const clearActiveSectionTimer = () => {
+    if (activeSectionTimerRef.current !== null) {
+      window.clearTimeout(activeSectionTimerRef.current);
+      activeSectionTimerRef.current = null;
+    }
+
+    pendingActiveSectionRef.current = null;
   };
 
-  const scrollToSection = (
-    sectionId: string,
-    behavior: ScrollBehavior = "smooth",
-    updateHistory = true
-  ) => {
-    const section = document.getElementById(sectionId);
-    if (!section) {
+  const setActiveSectionImmediate = (section: HomeSection | "") => {
+    clearActiveSectionTimer();
+    setActiveSection(section);
+  };
+
+  const queueActiveSectionFromScroll = (section: HomeSection | "") => {
+    pendingActiveSectionRef.current = section;
+
+    if (activeSectionTimerRef.current !== null) {
+      return;
+    }
+
+    activeSectionTimerRef.current = window.setTimeout(() => {
+      activeSectionTimerRef.current = null;
+      const nextSection = pendingActiveSectionRef.current;
+      pendingActiveSectionRef.current = null;
+
+      if (nextSection !== null) {
+        setActiveSection((currentSection) =>
+          currentSection === nextSection ? currentSection : nextSection
+        );
+      }
+    }, SCROLL_ACTIVE_SYNC_DELAY_MS);
+  };
+
+  const scrollToHomeSection = (section: HomeSection, behavior: ScrollBehavior) => {
+    const sectionEl = document.getElementById(section);
+
+    if (!sectionEl) {
       return false;
     }
 
-    const targetY =
-      section.getBoundingClientRect().top + window.scrollY - getNavOffset();
+    const sectionTop = sectionEl.getBoundingClientRect().top + window.scrollY;
 
-    window.scrollTo({ top: Math.max(targetY, 0), behavior });
-
-    const nextHash = `#${sectionId}`;
-    setCurrentHash(nextHash);
-
-    if (updateHistory) {
-      const nextUrl = `${window.location.pathname}${window.location.search}${nextHash}`;
-      window.history.replaceState(null, "", nextUrl);
-    }
+    window.scrollTo({
+      top: Math.max(0, sectionTop - NAV_SCROLL_OFFSET),
+      behavior,
+    });
 
     return true;
   };
 
-  const handleNavLinkClick = (
-    event: MouseEvent<HTMLAnchorElement>,
-    href: string,
-    closeMobile = false
-  ) => {
-    if (href === "/" && pathname === "/") {
+  const getActiveSectionFromScroll = (): HomeSection | "" => {
+    const aboutSection = document.getElementById("about");
+    const missionSection = document.getElementById("mission");
+
+    if (!aboutSection || !missionSection) {
+      return "";
+    }
+
+    const probeY = window.scrollY + NAV_SCROLL_OFFSET + SECTION_PROBE_OFFSET;
+    const aboutTop = aboutSection.offsetTop;
+    const aboutBottom = aboutTop + aboutSection.offsetHeight;
+    const missionTop = missionSection.offsetTop;
+    const missionBottom = missionTop + missionSection.offsetHeight;
+
+    if (probeY >= aboutTop && probeY < missionTop && probeY < aboutBottom) {
+      return "about";
+    }
+
+    if (probeY >= missionTop && probeY < missionBottom) {
+      return "mission";
+    }
+
+    return "";
+  };
+
+  const handleNavLinkClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    setIsMobileOpen(false);
+
+    if (pathname !== "/") {
+      return;
+    }
+
+    if (href === "/") {
       event.preventDefault();
+      setActiveSectionImmediate("");
+      window.history.replaceState(null, "", "/");
       window.scrollTo({ top: 0, behavior: "smooth" });
-      setCurrentHash("");
-      if (window.location.hash) {
-        const baseUrl = `${window.location.pathname}${window.location.search}`;
-        window.history.replaceState(null, "", baseUrl);
-      }
-      if (closeMobile) {
-        setIsMobileOpen(false);
-      }
       return;
     }
 
     if (!href.startsWith("/#")) {
-      if (closeMobile) {
-        setIsMobileOpen(false);
-      }
+      return;
+    }
+
+    const section = href.slice(2);
+
+    if (!isHomeSection(section)) {
       return;
     }
 
     event.preventDefault();
-    const sectionId = href.slice(2);
+    setActiveSectionImmediate(section);
 
-    if (pathname !== "/") {
-      router.push(href);
-      if (closeMobile) {
-        setIsMobileOpen(false);
-      }
-      return;
+    if (scrollToHomeSection(section, "smooth")) {
+      window.history.replaceState(null, "", `/#${section}`);
     }
-
-    const didScroll = scrollToSection(sectionId);
-    if (!didScroll) {
-      router.push(href);
-    }
-
-    if (closeMobile) {
-      setIsMobileOpen(false);
-    }
-  };
-
-  const isActiveLink = (href: string) => {
-    // Hash links are active on the homepage when their section is in view.
-    if (href.startsWith("/#")) {
-      return pathname === "/" && currentHash === href.slice(1);
-    }
-
-    // Keep parent nav item active for nested routes (e.g. /events/[slug]).
-    if (href !== "/" && pathname.startsWith(`${href}/`)) {
-      return true;
-    }
-
-    // Home is active on root when no tracked section is currently active.
-    if (href === "/") {
-      return pathname === "/" && !currentHash;
-    }
-
-    return pathname === href;
-  };
-
-  const getActiveLinkHref = () => {
-    const activeLink = navLinks.find((link) => isActiveLink(link.href));
-    return activeLink?.href;
   };
 
   useEffect(() => {
@@ -140,7 +163,7 @@ export default function Navbar() {
       setIsLoading(false);
       return;
     }
-
+    
     // Fake delay for loader verification matching the page delay
     setIsLoading(true);
     const timer = setTimeout(() => setIsLoading(false), FAKE_DELAY_MS);
@@ -149,175 +172,104 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 40);
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    if (pathname !== "/" || isLoading) {
-      setCurrentHash("");
+    if (pathname !== "/") {
+      setActiveSectionImmediate("");
       return;
     }
 
-    const updateActiveHash = () => {
-      const aboutSection = document.getElementById("about");
-      const missionSection = document.getElementById("mission");
+    let frameId: number | null = null;
+    let hashSyncTimer: number | null = null;
+    const syncActiveSection = (immediate = false) => {
+      const section = getActiveSectionFromScroll();
 
-      if (!aboutSection && !missionSection) {
+      if (immediate) {
+        setActiveSectionImmediate(section);
         return;
       }
 
-      const markerY = window.scrollY + getNavOffset() + 8;
-      const aboutTop = aboutSection
-        ? aboutSection.getBoundingClientRect().top + window.scrollY
-        : Number.POSITIVE_INFINITY;
-      const aboutBottom = aboutSection
-        ? aboutTop + aboutSection.offsetHeight
-        : Number.NEGATIVE_INFINITY;
-      const missionTop = missionSection
-        ? missionSection.getBoundingClientRect().top + window.scrollY
-        : Number.POSITIVE_INFINITY;
-      const missionBottom = missionSection
-        ? missionTop + missionSection.offsetHeight
-        : Number.NEGATIVE_INFINITY;
-
-      let nextHash = "";
-      if (markerY >= aboutTop && markerY < aboutBottom) {
-        nextHash = "#about";
-      } else if (markerY >= missionTop && markerY < missionBottom) {
-        nextHash = "#mission";
-      }
-
-      setCurrentHash((prev) => (prev === nextHash ? prev : nextHash));
+      queueActiveSectionFromScroll(section);
     };
 
-    let frameId = 0;
-    const scheduleUpdate = () => {
-      if (frameId) {
+    const handleScroll = () => {
+      if (frameId !== null) {
         return;
       }
+
       frameId = window.requestAnimationFrame(() => {
-        frameId = 0;
-        updateActiveHash();
+        syncActiveSection();
+        frameId = null;
       });
     };
 
-    scheduleUpdate();
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
+    const handleResize = () => syncActiveSection(true);
 
-    return () => {
-      if (frameId) {
-        window.cancelAnimationFrame(frameId);
-      }
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-    };
-  }, [pathname, isLoading]);
-
-  useEffect(() => {
-    if (pathname !== "/" || isLoading) {
-      return;
-    }
-
-    const hash = window.location.hash;
-    if (hash !== "#about" && hash !== "#mission") {
-      return;
-    }
-
-    const sectionId = hash.slice(1);
-    let frameId = 0;
-    let attempts = 0;
-    const maxAttempts = 30;
-
-    const alignToSection = () => {
-      attempts += 1;
-      const didScroll = scrollToSection(sectionId, "smooth", false);
-
-      if (didScroll || attempts >= maxAttempts) {
-        return;
-      }
-
-      frameId = window.requestAnimationFrame(alignToSection);
-    };
-
-    frameId = window.requestAnimationFrame(alignToSection);
-
-    return () => {
-      if (frameId) {
-        window.cancelAnimationFrame(frameId);
-      }
-    };
-  }, [pathname, isLoading]);
-
-  useEffect(() => {
-    if (isLoading) {
-      setActiveIndicator((prev) => (prev.visible ? { ...prev, visible: false } : prev));
-      return;
-    }
-
-    const updateIndicatorPosition = () => {
-      const wrapEl = desktopLinksWrapRef.current;
-      if (!wrapEl) {
-        return;
-      }
-
-      const activeHref = getActiveLinkHref();
-      if (!activeHref) {
-        setActiveIndicator((prev) => (prev.visible ? { ...prev, visible: false } : prev));
-        return;
-      }
-
-      const activeLinkEl = desktopLinksRef.current[activeHref];
-      if (!activeLinkEl) {
-        return;
-      }
-
-      const wrapRect = wrapEl.getBoundingClientRect();
-      const linkRect = activeLinkEl.getBoundingClientRect();
-      const nextLeft = Math.round(linkRect.left - wrapRect.left);
-      const nextWidth = Math.round(linkRect.width);
-
-      setActiveIndicator((prev) => {
-        if (
-          prev.visible &&
-          prev.left === nextLeft &&
-          prev.width === nextWidth
-        ) {
-          return prev;
-        }
-
-        return {
-          left: nextLeft,
-          width: nextWidth,
-          visible: true,
-        };
-      });
-    };
-
-    let frameId = window.requestAnimationFrame(updateIndicatorPosition);
-    const handleResize = () => {
-      window.cancelAnimationFrame(frameId);
-      frameId = window.requestAnimationFrame(updateIndicatorPosition);
-    };
-
+    syncActiveSection(true);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleResize);
 
+    const hash = window.location.hash.replace("#", "");
+
+    if (isHomeSection(hash)) {
+      const alignToHash = (attempt = 0) => {
+        const didScroll = scrollToHomeSection(hash, attempt === 0 ? "auto" : "smooth");
+
+        if (didScroll) {
+          setActiveSectionImmediate(hash);
+          return;
+        }
+
+        if (attempt < 8) {
+          hashSyncTimer = window.setTimeout(() => alignToHash(attempt + 1), 120);
+        }
+      };
+
+      alignToHash();
+    }
+
     return () => {
-      window.cancelAnimationFrame(frameId);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
+      clearActiveSectionTimer();
+
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+
+      if (hashSyncTimer !== null) {
+        window.clearTimeout(hashSyncTimer);
+      }
     };
-  }, [pathname, currentHash, isLoading]);
+  }, [pathname]);
+
+  const isActiveLink = (href: string) => {
+    if (href === "/") {
+      return pathname === "/" && activeSection === "";
+    }
+
+    if (href.startsWith("/#")) {
+      return pathname === "/" && activeSection === href.slice(2);
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+
 
   if (isLoading) {
     return (
-      <nav ref={navRef} className="fixed top-4 left-0 right-0 z-50 px-3 md:px-5">
+      <nav className="fixed top-4 left-0 right-0 z-50 px-3 md:px-5">
         <div
           className={cn(
-            "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-500 ease-out px-5",
+            "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-300 px-5",
             isScrolled
-              ? "bg-[#eef4ee]/95 border-sage-200 shadow-lg backdrop-blur-md"
-              : "bg-[#dce8df]/90 border-sage-300/80 shadow-md backdrop-blur-md"
+              ? "bg-[#eef4ee]/95 border-sage-200 shadow-[0_16px_36px_rgba(17,42,35,0.26)] backdrop-blur-md"
+              : "bg-[#dce8df]/90 border-sage-300/80 shadow-[0_10px_24px_rgba(17,42,35,0.22)] backdrop-blur-md"
           )}
         >
           {/* Logo Skeleton */}
@@ -341,20 +293,20 @@ export default function Navbar() {
   }
 
   return (
-    <nav ref={navRef} className="fixed top-4 left-0 right-0 z-50 px-3 md:px-5">
+    <nav className="fixed top-4 left-0 right-0 z-50 px-3 md:px-5">
       <div
         className={cn(
-          "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-500 ease-out px-5",
+          "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-300 px-5",
           isScrolled
             ? "bg-[#eef4ee]/95 border-sage-200 shadow-lg backdrop-blur-md"
-            : "bg-[#dce8df]/90 border-sage-300/80 shadow-md backdrop-blur-md"
+              : "bg-[#dce8df]/90 border-sage-300/80 shadow-md backdrop-blur-md"
         )}
       >
         {/* Logo */}
         <Link
           href="/"
           className={cn(
-            "font-bold text-base tracking-tight transition-colors duration-500 ease-out [text-shadow:_0_1px_2px_rgb(255_255_255_/_60%)]",
+            "font-bold text-base tracking-tight transition-colors duration-300 [text-shadow:_0_1px_2px_rgb(255_255_255_/_60%)]",
             isScrolled ? "text-sage-800" : "text-sage-900"
           )}
         >
@@ -362,49 +314,52 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-7">
-          <div ref={desktopLinksWrapRef} className="relative flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className={cn(
-                "absolute top-1/2 -translate-y-1/2 h-9 rounded-full bg-sage-600 shadow-[0_4px_12px_rgba(82,121,111,0.35)] transition-[left,width,opacity] duration-500 ease-out",
-                activeIndicator.visible ? "opacity-100" : "opacity-0"
-              )}
-              style={{ left: activeIndicator.left, width: activeIndicator.width }}
-            />
+        <div
+          className="hidden md:flex items-center gap-7"
+          onMouseLeave={() => setHoveredHref(null)}
+        >
+          {navLinks.map((link) => {
+            const isActive = isActiveLink(link.href);
+            const showHoverPill = hoveredHref === link.href && !isActive;
 
-            {navLinks.map((link) => {
-              const isActive = isActiveLink(link.href);
-
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  ref={(element) => {
-                    desktopLinksRef.current[link.href] = element;
-                  }}
-                  aria-current={isActive ? "page" : undefined}
-                  onClick={(event) => handleNavLinkClick(event, link.href)}
-                  className={cn(
-                    "relative z-10 text-sm font-medium px-3 py-1.5 rounded-full transform-gpu transition-[color,background-color,transform] duration-500 ease-out [text-shadow:_0_1px_2px_rgb(255_255_255_/_60%)]",
-                    isActive
-                      ? "text-white scale-[1.02]"
-                      : isScrolled
-                      ? "text-sage-900 hover:text-sage-700 hover:bg-sage-100/90 hover:scale-[1.01]"
-                      : "text-sage-800 hover:text-sage-700 hover:bg-white/70 hover:scale-[1.01]"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </div>
-
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={(event) => handleNavLinkClick(event, link.href)}
+                onMouseEnter={() => setHoveredHref(link.href)}
+                className={cn(
+                  "relative z-0 px-2 py-1 text-sm font-medium transition-all duration-500 ease-out",
+                  isActive
+                    ? "text-white"
+                    : isScrolled
+                    ? "text-sage-900 hover:text-sage-700"
+                    : "text-sage-800 hover:text-sage-700"
+                )}
+              >
+                {showHoverPill && (
+                  <motion.span
+                    layoutId="desktop-nav-hover-pill"
+                    transition={NAV_PILL_TRANSITION}
+                    className="absolute inset-x-[-10px] inset-y-[-6px] rounded-full border border-white/45 bg-white/30 shadow-[0_8px_18px_rgba(222,236,230,0.5)] backdrop-blur-[4px]"
+                  />
+                )}
+                {isActive && (
+                  <motion.span
+                    layoutId="desktop-nav-active-pill"
+                    transition={NAV_PILL_TRANSITION}
+                    className="absolute inset-x-[-10px] inset-y-[-6px] rounded-full bg-gradient-to-b from-sage-600 to-sage-700 ring-1 ring-sage-500/90 shadow-[0_8px_18px_rgba(34,98,78,0.45)]"
+                  />
+                )}
+                <span className="relative z-10">{link.label}</span>
+              </Link>
+            );
+          })}
           <button
             onClick={openModal}
-            className="group relative overflow-hidden bg-sage-500 text-white text-sm font-semibold px-5 py-2 rounded-[8px] shadow-[0_4px_14px_0_rgb(82,121,111,0.39)] hover:shadow-[0_6px_20px_rgba(82,121,111,0.5)] hover:bg-sage-600 hover:-translate-y-[1px] transition-all duration-200 block"
+            className={cn(DONATE_NOW_BUTTON_CLASS, "block")}
           >
-            <span className="relative z-10">Donate Now</span>
+            <span className={DONATE_NOW_LABEL_CLASS}>Donate Now</span>
             {/* Glossy sweep animation */}
             <div className="absolute top-0 -bottom-1 w-8 bg-white/20 -skew-x-[20deg] animate-shimmer-sweep pointer-events-none group-hover:hidden" />
           </button>
@@ -429,21 +384,37 @@ export default function Navbar() {
           <div className="flex flex-col px-5 py-4 gap-4">
             {navLinks.map((link) => {
               const isActive = isActiveLink(link.href);
+              const showHoverPill = hoveredHref === link.href && !isActive;
 
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  aria-current={isActive ? "page" : undefined}
-                  onClick={(event) => handleNavLinkClick(event, link.href, true)}
                   className={cn(
-                    "text-sm font-medium py-1.5 px-3 rounded-lg transform-gpu transition-[background-color,color,box-shadow,transform] duration-500 ease-out",
+                    "relative rounded-full px-3 py-2 text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-sage-600 text-white shadow-[0_4px_12px_rgba(82,121,111,0.25)]"
-                      : "text-sage-800 hover:text-sage-600 hover:bg-sage-100"
+                      ? "text-white"
+                      : "text-sage-800 hover:bg-sage-50 hover:text-sage-600"
                   )}
+                  onClick={(event) => handleNavLinkClick(event, link.href)}
+                  onMouseEnter={() => setHoveredHref(link.href)}
+                  onMouseLeave={() => setHoveredHref((current) => (current === link.href ? null : current))}
                 >
-                  {link.label}
+                  {showHoverPill && (
+                    <motion.span
+                      layoutId="mobile-nav-hover-pill"
+                      transition={NAV_PILL_TRANSITION}
+                      className="absolute inset-0 rounded-full border border-white/45 bg-white/35 shadow-[0_8px_18px_rgba(222,236,230,0.45)] backdrop-blur-[4px]"
+                    />
+                  )}
+                  {isActive && (
+                    <motion.span
+                      layoutId="mobile-nav-active-pill"
+                      transition={NAV_PILL_TRANSITION}
+                      className="absolute inset-0 rounded-full bg-gradient-to-b from-sage-600 to-sage-700 ring-1 ring-sage-500/90 shadow-[0_8px_18px_rgba(34,98,78,0.4)]"
+                    />
+                  )}
+                  <span className="relative z-10">{link.label}</span>
                 </Link>
               );
             })}
@@ -452,9 +423,9 @@ export default function Navbar() {
                 openModal();
                 setIsMobileOpen(false);
               }}
-              className="group relative overflow-hidden w-full bg-sage-500 text-white text-sm font-semibold py-2.5 rounded-[8px] mt-1 shadow-[0_4px_14px_0_rgb(82,121,111,0.39)] hover:shadow-[0_6px_20px_rgba(82,121,111,0.5)] hover:bg-sage-600 hover:-translate-y-[1px] transition-all duration-200 block"
+              className={cn(DONATE_NOW_BUTTON_CLASS, "mt-1 w-full py-2.5")}
             >
-              <span className="relative z-10">Donate Now</span>
+              <span className={DONATE_NOW_LABEL_CLASS}>Donate Now</span>
               {/* Glossy sweep animation */}
               <div className="absolute top-0 -bottom-1 w-12 bg-white/20 -skew-x-[20deg] animate-shimmer-sweep pointer-events-none group-hover:hidden" />
             </button>
