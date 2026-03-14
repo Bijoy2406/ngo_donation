@@ -4,7 +4,7 @@ import FloatingActions from "@/components/layout/FloatingActions";
 import DonationModal from "@/components/ui/DonationModal";
 import { DonationModalProvider } from "@/lib/context/DonationModalContext";
 import Providers from "@/components/providers/ProgressBarProvider";
-//import ImageProtectionProvider from "@/components/providers/ImageProtectionProvider";
+import ImageProtectionProvider from "@/components/providers/ImageProtectionProvider";
 import { getDonationSettings, getSiteSettings } from "@/sanity/lib/queries";
 
 export default async function SiteLayout({
@@ -19,8 +19,8 @@ export default async function SiteLayout({
 
   return (
     <Providers>
-      <DonationModalProvider>
-        {/* <ImageProtectionProvider /> */}
+      <DonationModalProvider> 
+        {/* <ImageProtectionProvider /> */}  {/* disable right click */}
       <Navbar />
       <main className="relative isolate overflow-hidden">
         <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#0f6f68]/10 blur-3xl" />
