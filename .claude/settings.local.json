@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs wc:*)",
+      "Bash(grep -r NEXT_PUBLIC /e/ngo --include=*.ts --include=*.tsx --include=*.js)",
+      "Bash(wc -l /e/ngo/components/**/*.tsx)",
+      "Bash(npm run:*)"
+    ]
+  }
+}

@@ -115,12 +115,13 @@ export default function DonationModal({ settings }: DonationModalProps) {
                 <div className="flex justify-center">
                   <div className="image-protected w-40 h-40 rounded-[8px] overflow-hidden">
                     <Image
-                      src={urlFor(data.qrCode).width(320).url()}
+                      src={urlFor(data.qrCode).width(320).format("auto").quality("auto").url()}
                       alt="Donation QR Code"
                       width={160}
                       height={160}
                       className="object-contain no-select"
                       draggable={false}
+                      sizes="160px"
                     />
                   </div>
                 </div>

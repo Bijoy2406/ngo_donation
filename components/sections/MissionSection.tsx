@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
-import { urlFor } from "@/sanity/lib/image";
+import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import type { MissionSection } from "@/types";
 
@@ -11,8 +11,9 @@ interface MissionSectionProps {
 export default function MissionSectionComp({ mission }: MissionSectionProps) {
   const hasImage = !!mission?.image;
   const imageUrl = hasImage
-    ? urlFor(mission!.image!).width(600).height(600).format("webp").quality(80).url()
+    ? urlFor(mission!.image!).width(600).height(600).format("auto").quality("auto:good").url()
     : "";
+  const blurUrl = hasImage ? getBlurUrl(mission!.image!) : undefined;
 
   const heading = mission?.heading ?? "Our Mission";
   const hasDescription = mission?.description && mission.description.length > 0;
@@ -29,6 +30,8 @@ export default function MissionSectionComp({ mission }: MissionSectionProps) {
                   src={imageUrl}
                   alt="Our Mission"
                   fill
+                  placeholder={blurUrl ? "blur" : "empty"}
+                  blurDataURL={blurUrl}
                   className="object-cover no-select"
                   draggable={false}
                   sizes="(max-width: 768px) 100vw, 40vw"
