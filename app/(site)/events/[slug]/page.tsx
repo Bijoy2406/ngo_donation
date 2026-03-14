@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
-import { urlFor } from "@/sanity/lib/image";
+import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import { getEventBySlug, getAllEvents } from "@/sanity/lib/queries";
 import { formatDate, simulateDelay } from "@/lib/utils";
 import ScrollReveal from "@/components/ui/ScrollReveal";
@@ -39,8 +39,10 @@ export default async function EventDetailPage({
   if (!event) notFound();
 
   const heroUrl = event.thumbnail
-    ? urlFor(event.thumbnail).width(1920).height(1080).format("webp").quality(80).url()
+    ? urlFor(event.thumbnail).width(1920).height(1080).format("auto").quality("auto:good").url()
     : "/placeholder-landscape.svg";
+
+  const heroBlurUrl = event.thumbnail ? getBlurUrl(event.thumbnail) : undefined;
 
   return (
     <>
@@ -51,6 +53,8 @@ export default async function EventDetailPage({
           alt={event.title}
           fill
           priority
+          placeholder={heroBlurUrl ? "blur" : "empty"}
+          blurDataURL={heroBlurUrl}
           className="object-cover no-select"
           draggable={false}
           sizes="100vw"
@@ -101,9 +105,10 @@ export default async function EventDetailPage({
               {event.gallery.map((img, i) => {
                 const src = urlFor(img)
                   .width(800)
-                  .format("webp")
-                  .quality(75)
+                  .format("auto")
+                  .quality("auto:eco")
                   .url();
+                const galleryBlur = getBlurUrl(img);
                 return (
                   <ScrollReveal
                     key={i}
@@ -116,9 +121,12 @@ export default async function EventDetailPage({
                         alt={`Gallery image ${i + 1}`}
                         width={800}
                         height={600}
+                        placeholder={galleryBlur ? "blur" : "empty"}
+                        blurDataURL={galleryBlur || undefined}
                         className="w-full h-auto object-cover no-select"
                         draggable={false}
                         loading="lazy"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                       />
                     </div>
                   </ScrollReveal>

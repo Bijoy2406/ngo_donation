@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { urlFor } from "@/sanity/lib/image";
+import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import { formatDate } from "@/lib/utils";
 import type { Event } from "@/types";
 
@@ -18,8 +18,10 @@ export default function EventCard({ event }: EventCardProps) {
   );
 
   const imageUrl = hasImage
-    ? urlFor(event.thumbnail!).width(800).height(450).format("webp").quality(80).url()
+    ? urlFor(event.thumbnail!).width(800).height(450).format("auto").quality("auto:good").url()
     : "";
+
+  const blurUrl = hasImage ? getBlurUrl(event.thumbnail!) : undefined;
 
   return (
     <article className="group bg-white rounded-[8px] shadow-card overflow-hidden hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 border border-transparent hover:border-sage-200">
@@ -30,9 +32,11 @@ export default function EventCard({ event }: EventCardProps) {
             src={imageUrl}
             alt={event.title}
             fill
+            placeholder={blurUrl ? "blur" : "empty"}
+            blurDataURL={blurUrl}
             className="object-cover group-hover:scale-105 transition-transform duration-500 no-select"
             draggable={false}
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
           <div className="flex flex-col items-center justify-center text-gray-400 no-select">

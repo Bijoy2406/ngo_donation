@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
 import { cn, DONATE_NOW_BUTTON_CLASS, DONATE_NOW_LABEL_CLASS } from "@/lib/utils";
-import { urlFor } from "@/sanity/lib/image";
+import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import type { SiteSettings } from "@/types";
 
 interface HeroSectionProps {
@@ -24,8 +24,12 @@ export default function HeroSection({ settings }: HeroSectionProps) {
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
   const heroImageUrl = settings?.heroImage
-    ? urlFor(settings.heroImage).width(1920).format("webp").quality(80).url()
+    ? urlFor(settings.heroImage).width(1920).format("auto").quality("auto:good").url()
     : null;
+
+  const heroBlurUrl = settings?.heroImage
+    ? getBlurUrl(settings.heroImage)
+    : undefined;
 
   const heading =
     settings?.heroHeading ?? "Empowering Communities, Changing Lives";
@@ -49,8 +53,11 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             alt="Hero background"
             fill
             priority
+            placeholder={heroBlurUrl ? "blur" : "empty"}
+            blurDataURL={heroBlurUrl}
             className="object-cover no-select"
             draggable={false}
+            sizes="100vw"
           />
         ) : (
           <div className="absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-500 font-semibold text-2xl md:text-4xl no-select">

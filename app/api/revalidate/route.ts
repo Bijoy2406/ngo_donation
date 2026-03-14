@@ -1,8 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+
+const ALL_TAGS = [
+  "siteSettings",
+  "events",
+  "team",
+  "carousel",
+  "mission",
+  "impact",
+  "faq",
+  "donation",
+];
+
+function revalidateAllTags() {
+  for (const tag of ALL_TAGS) {
+    revalidateTag(tag);
+  }
+}
 
 function revalidateSiteWide() {
-  // Revalidate layout-driven data plus key pages that depend on Sanity content.
+  revalidateAllTags();
   revalidatePath("/", "layout");
   revalidatePath("/", "page");
   revalidatePath("/events", "page");
@@ -29,20 +46,38 @@ export async function POST(request: NextRequest) {
 
   switch (type) {
     case "event":
+      revalidateTag("events");
       revalidatePath("/events", "page");
       revalidatePath("/events/[slug]", "page");
       revalidatePath("/", "page");
       break;
     case "teamMember":
+      revalidateTag("team");
       revalidatePath("/team", "page");
       break;
     case "siteSettings":
-    case "carouselItem":
-    case "missionSection":
-    case "impactItem":
-    case "faqItem":
-    case "donationSettings":
+      revalidateTag("siteSettings");
       revalidateSiteWide();
+      break;
+    case "carouselItem":
+      revalidateTag("carousel");
+      revalidatePath("/", "page");
+      break;
+    case "missionSection":
+      revalidateTag("mission");
+      revalidatePath("/", "page");
+      break;
+    case "impactItem":
+      revalidateTag("impact");
+      revalidatePath("/", "page");
+      break;
+    case "faqItem":
+      revalidateTag("faq");
+      revalidatePath("/", "page");
+      break;
+    case "donationSettings":
+      revalidateTag("donation");
+      revalidatePath("/", "layout");
       break;
     default:
       revalidateSiteWide();

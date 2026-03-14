@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
-import { urlFor } from "@/sanity/lib/image";
+import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import type { CarouselItem } from "@/types";
 
@@ -129,11 +129,19 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
             onTouchEnd={onTouchEnd}
           >
             {displayItems.map((item, i) => {
+              // Virtualize: only render current, previous, and next slides
+              const len = displayItems.length;
+              const prev = (currentIdx - 1 + len) % len;
+              const next = (currentIdx + 1) % len;
+              const isVisible = i === currentIdx || i === prev || i === next;
+              if (!isVisible && len > 3) return null;
+
               const active = i === currentIdx;
               const hasImage = !!item.image;
               const imageUrl = hasImage
-                ? urlFor(item.image!).width(1600).height(800).format("webp").quality(85).url()
+                ? urlFor(item.image!).width(1600).height(800).format("auto").quality("auto:good").url()
                 : "";
+              const blurUrl = hasImage ? getBlurUrl(item.image!) : undefined;
 
               return (
                 <div
@@ -150,6 +158,8 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
                       alt={item.heading}
                       fill
                       priority={i === 0}
+                      placeholder={blurUrl ? "blur" : "empty"}
+                      blurDataURL={blurUrl}
                       className={`object-cover transition-transform duration-[8s] ease-out ${
                         active ? "scale-105" : "scale-100"
                       }`}
