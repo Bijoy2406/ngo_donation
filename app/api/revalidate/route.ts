@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 
+function revalidateSiteWide() {
+  // Revalidate layout-driven data plus key pages that depend on Sanity content.
+  revalidatePath("/", "layout");
+  revalidatePath("/", "page");
+  revalidatePath("/events", "page");
+  revalidatePath("/events/[slug]", "page");
+  revalidatePath("/team", "page");
+  revalidatePath("/contact", "page");
+}
+
 export async function POST(request: NextRequest) {
   const secret = request.nextUrl.searchParams.get("secret");
 
@@ -19,12 +29,12 @@ export async function POST(request: NextRequest) {
 
   switch (type) {
     case "event":
-      revalidatePath("/events");
+      revalidatePath("/events", "page");
       revalidatePath("/events/[slug]", "page");
-      revalidatePath("/");
+      revalidatePath("/", "page");
       break;
     case "teamMember":
-      revalidatePath("/team");
+      revalidatePath("/team", "page");
       break;
     case "siteSettings":
     case "carouselItem":
@@ -32,12 +42,10 @@ export async function POST(request: NextRequest) {
     case "impactItem":
     case "faqItem":
     case "donationSettings":
-      revalidatePath("/");
+      revalidateSiteWide();
       break;
     default:
-      revalidatePath("/");
-      revalidatePath("/events");
-      revalidatePath("/team");
+      revalidateSiteWide();
   }
 
   return NextResponse.json({ revalidated: true, type });

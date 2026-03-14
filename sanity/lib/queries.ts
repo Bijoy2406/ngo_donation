@@ -1,4 +1,4 @@
-import { client } from "./client";
+import { serverClient } from "./client";
 import type {
   SiteSettings,
   Event,
@@ -11,7 +11,7 @@ import type {
 } from "@/types";
 
 export async function getSiteSettings(): Promise<SiteSettings | null> {
-  return client.fetch(`*[_type == "siteSettings"][0]{
+  return serverClient.fetch(`*[_type == "siteSettings"][0]{
     _id,
     heroHeading,
     heroSubheading,
@@ -32,7 +32,7 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
 }
 
 export async function getFeaturedEvents(): Promise<Event[]> {
-  return client.fetch(`*[_type == "event" && featured == true] | order(featuredOrder asc)[0...4]{
+  return serverClient.fetch(`*[_type == "event" && featured == true] | order(featuredOrder asc)[0...4]{
     _id,
     title,
     slug,
@@ -43,7 +43,7 @@ export async function getFeaturedEvents(): Promise<Event[]> {
 }
 
 export async function getAllEvents(): Promise<Event[]> {
-  return client.fetch(`*[_type == "event"] | order(date desc){
+  return serverClient.fetch(`*[_type == "event"] | order(date desc){
     _id,
     title,
     slug,
@@ -55,7 +55,7 @@ export async function getAllEvents(): Promise<Event[]> {
 }
 
 export async function getEventBySlug(slug: string): Promise<Event | null> {
-  return client.fetch(
+  return serverClient.fetch(
     `*[_type == "event" && slug.current == $slug][0]{
       _id,
       title,
@@ -71,7 +71,7 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
 }
 
 export async function getTeamMembers(): Promise<TeamMember[]> {
-  return client.fetch(`*[_type == "teamMember"] | order(order asc){
+  return serverClient.fetch(`*[_type == "teamMember"] | order(order asc){
     _id,
     name,
     role,
@@ -81,7 +81,7 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
 }
 
 export async function getCarouselItems(): Promise<CarouselItem[]> {
-  return client.fetch(`*[_type == "carouselItem"] | order(order asc){
+  return serverClient.fetch(`*[_type == "carouselItem"] | order(order asc){
     _id,
     heading,
     subheading,
@@ -91,7 +91,7 @@ export async function getCarouselItems(): Promise<CarouselItem[]> {
 }
 
 export async function getMission(): Promise<MissionSection | null> {
-  return client.fetch(`*[_type == "missionSection"][0]{
+  return serverClient.fetch(`*[_type == "missionSection"][0]{
     _id,
     heading,
     description,
@@ -100,7 +100,7 @@ export async function getMission(): Promise<MissionSection | null> {
 }
 
 export async function getImpactItems(): Promise<ImpactItem[]> {
-  return client.fetch(`*[_type == "impactItem"] | order(order asc){
+  return serverClient.fetch(`*[_type == "impactItem"] | order(order asc){
     _id,
     icon,
     heading,
@@ -110,7 +110,7 @@ export async function getImpactItems(): Promise<ImpactItem[]> {
 }
 
 export async function getFAQItems(): Promise<FAQItem[]> {
-  return client.fetch(`*[_type == "faqItem"] | order(order asc){
+  return serverClient.fetch(`*[_type == "faqItem"] | order(order asc){
     _id,
     question,
     answer,
@@ -119,7 +119,7 @@ export async function getFAQItems(): Promise<FAQItem[]> {
 }
 
 export async function getDonationSettings(): Promise<DonationSettings | null> {
-  return client.fetch(`*[_type == "donationSettings"][0]{
+  return serverClient.fetch(`*[_type == "donationSettings"][0]{
     _id,
     heading,
     description,

@@ -1,9 +1,20 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
+import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./sanity/schemaTypes";
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET!;
+const projectId =
+  process.env.SANITY_STUDIO_PROJECT_ID ??
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const dataset =
+  process.env.SANITY_STUDIO_DATASET ??
+  process.env.NEXT_PUBLIC_SANITY_DATASET;
+
+if (!projectId || !dataset) {
+  throw new Error(
+    "Missing Sanity environment variables. Set SANITY_STUDIO_PROJECT_ID and SANITY_STUDIO_DATASET (or NEXT_PUBLIC_SANITY_PROJECT_ID/NEXT_PUBLIC_SANITY_DATASET)."
+  );
+}
 
 const plugins = [
   structureTool({
@@ -39,16 +50,10 @@ const plugins = [
             ),
         ]),
   }),
+  visionTool(),
 ];
 
-if (typeof window !== "undefined") {
-  // Vision relies on browser/client React APIs.
-  const { visionTool } = require("@sanity/vision");
-  plugins.push(visionTool());
-}
-
 export default defineConfig({
-  basePath: "/studio",
   name: "faf-studio",
   title: "Farzana Afroz Foundation",
   projectId,
