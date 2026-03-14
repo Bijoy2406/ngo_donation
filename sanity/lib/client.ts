@@ -1,8 +1,18 @@
-import { createClient } from "next-sanity";
+import { createClient } from "@sanity/client";
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET!;
+const projectId =
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ??
+  process.env.SANITY_STUDIO_PROJECT_ID;
+const dataset =
+  process.env.NEXT_PUBLIC_SANITY_DATASET ??
+  process.env.SANITY_STUDIO_DATASET;
 const apiVersion = "2024-01-01";
+
+if (!projectId || !dataset) {
+  throw new Error(
+    "Missing Sanity environment variables. Set NEXT_PUBLIC_SANITY_PROJECT_ID/NEXT_PUBLIC_SANITY_DATASET or SANITY_STUDIO_PROJECT_ID/SANITY_STUDIO_DATASET."
+  );
+}
 
 export const client = createClient({
   projectId,
