@@ -10,7 +10,6 @@ import {
   cn,
   DONATE_NOW_BUTTON_CLASS,
   DONATE_NOW_LABEL_CLASS,
-  FAKE_DELAY_MS,
 } from "@/lib/utils";
 
 const navLinks = [
@@ -40,7 +39,6 @@ const isHomeSection = (value: string): value is HomeSection =>
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<HomeSection | "">("");
   const [hoveredHref, setHoveredHref] = useState<string | null>(null);
   const pendingActiveSectionRef = useRef<HomeSection | "" | null>(null);
@@ -127,6 +125,28 @@ export default function Navbar() {
   const handleNavLinkClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
     setIsMobileOpen(false);
 
+    if (href.startsWith("/#")) {
+      const section = href.slice(2);
+
+      if (!isHomeSection(section)) {
+        return;
+      }
+
+      // Pre-set active section so cross-page hash navigation doesn't flicker through Home.
+      setActiveSectionImmediate(section);
+
+      if (pathname !== "/") {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (scrollToHomeSection(section, "smooth")) {
+        window.history.replaceState(null, "", `/#${section}`);
+      }
+      return;
+    }
+
     if (pathname !== "/") {
       return;
     }
@@ -136,38 +156,11 @@ export default function Navbar() {
       setActiveSectionImmediate("");
       window.history.replaceState(null, "", "/");
       window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    if (!href.startsWith("/#")) {
-      return;
-    }
-
-    const section = href.slice(2);
-
-    if (!isHomeSection(section)) {
-      return;
-    }
-
-    event.preventDefault();
-    setActiveSectionImmediate(section);
-
-    if (scrollToHomeSection(section, "smooth")) {
-      window.history.replaceState(null, "", `/#${section}`);
     }
   };
 
   useEffect(() => {
-    // Skip skeleton entirely if delay is off
-    if (FAKE_DELAY_MS === 0) {
-      setIsLoading(false);
-      return;
-    }
-    
-    // Fake delay for loader verification matching the page delay
-    setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), FAKE_DELAY_MS);
-    return () => clearTimeout(timer);
+    setHoveredHref(null);
   }, [pathname]);
 
   useEffect(() => {
@@ -209,18 +202,24 @@ export default function Navbar() {
 
     const handleResize = () => syncActiveSection(true);
 
-    syncActiveSection(true);
+    const hash = window.location.hash.replace("#", "");
+    const hashSection = isHomeSection(hash) ? hash : "";
+
+    if (hashSection) {
+      setActiveSectionImmediate(hashSection);
+    } else {
+      syncActiveSection(true);
+    }
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleResize);
 
-    const hash = window.location.hash.replace("#", "");
-
-    if (isHomeSection(hash)) {
+    if (hashSection) {
       const alignToHash = (attempt = 0) => {
-        const didScroll = scrollToHomeSection(hash, attempt === 0 ? "auto" : "smooth");
+        const didScroll = scrollToHomeSection(hashSection, attempt === 0 ? "auto" : "smooth");
 
         if (didScroll) {
-          setActiveSectionImmediate(hash);
+          setActiveSectionImmediate(hashSection);
           return;
         }
 
@@ -258,39 +257,6 @@ export default function Navbar() {
 
     return pathname === href || pathname.startsWith(`${href}/`);
   };
-
-
-
-  if (isLoading) {
-    return (
-      <nav className="fixed top-4 left-0 right-0 z-50 px-3 md:px-5">
-        <div
-          className={cn(
-            "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-300 px-5",
-            isScrolled
-              ? "bg-[#eef4ee]/95 border-sage-200 shadow-[0_16px_36px_rgba(17,42,35,0.26)] backdrop-blur-md"
-              : "bg-[#dce8df]/90 border-sage-300/80 shadow-[0_10px_24px_rgba(17,42,35,0.22)] backdrop-blur-md"
-          )}
-        >
-          {/* Logo Skeleton */}
-          <div className="skeleton h-5 w-48 rounded" />
-
-          {/* Desktop Nav Skeleton */}
-          <div className="hidden md:flex items-center gap-7">
-            <div className="skeleton h-4 w-12 rounded" />
-            <div className="skeleton h-4 w-16 rounded" />
-            <div className="skeleton h-4 w-12 rounded" />
-            <div className="skeleton h-4 w-16 rounded" />
-            <div className="skeleton h-4 w-20 rounded" />
-            <div className="skeleton h-9 w-[112px] rounded-[8px]" />
-          </div>
-
-          {/* Mobile Toggle Skeleton */}
-          <div className="md:hidden skeleton h-6 w-6 rounded" />
-        </div>
-      </nav>
-    );
-  }
 
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 px-3 md:px-5">
@@ -339,6 +305,7 @@ export default function Navbar() {
               >
                 {showHoverPill && (
                   <motion.span
+                    initial={false}
                     layoutId="desktop-nav-hover-pill"
                     transition={NAV_PILL_TRANSITION}
                     className="absolute inset-x-[-10px] inset-y-[-6px] rounded-full border border-white/45 bg-white/30 shadow-[0_8px_18px_rgba(222,236,230,0.5)] backdrop-blur-[4px]"
@@ -346,6 +313,7 @@ export default function Navbar() {
                 )}
                 {isActive && (
                   <motion.span
+                    initial={false}
                     layoutId="desktop-nav-active-pill"
                     transition={NAV_PILL_TRANSITION}
                     className="absolute inset-x-[-10px] inset-y-[-6px] rounded-full bg-gradient-to-b from-sage-600 to-sage-700 ring-1 ring-sage-500/90 shadow-[0_8px_18px_rgba(34,98,78,0.45)]"
@@ -402,6 +370,7 @@ export default function Navbar() {
                 >
                   {showHoverPill && (
                     <motion.span
+                      initial={false}
                       layoutId="mobile-nav-hover-pill"
                       transition={NAV_PILL_TRANSITION}
                       className="absolute inset-0 rounded-full border border-white/45 bg-white/35 shadow-[0_8px_18px_rgba(222,236,230,0.45)] backdrop-blur-[4px]"
@@ -409,6 +378,7 @@ export default function Navbar() {
                   )}
                   {isActive && (
                     <motion.span
+                      initial={false}
                       layoutId="mobile-nav-active-pill"
                       transition={NAV_PILL_TRANSITION}
                       className="absolute inset-0 rounded-full bg-gradient-to-b from-sage-600 to-sage-700 ring-1 ring-sage-500/90 shadow-[0_8px_18px_rgba(34,98,78,0.4)]"
