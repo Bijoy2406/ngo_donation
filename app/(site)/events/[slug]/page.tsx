@@ -47,7 +47,7 @@ export default async function EventDetailPage({
   return (
     <>
       {/* Hero Image */}
-      <section className="relative pt-[60px] aspect-[16/7] max-h-[500px] overflow-hidden image-protected">
+      <section className="relative mt-[84px] md:mt-[92px] aspect-[16/7] max-h-[500px] w-full overflow-hidden image-protected">
         <Image
           src={heroUrl}
           alt={event.title}
@@ -60,17 +60,18 @@ export default async function EventDetailPage({
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 flex items-end">
-          <div className="max-w-6xl mx-auto px-5 pb-8 w-full">
-            <h1 className="text-[22px] md:text-[34px] font-bold text-white leading-snug max-w-2xl no-select">
-              {event.title}
-            </h1>
-            {event.date && (
-              <p className="text-white/70 text-sm mt-2 no-select">
-                {formatDate(event.date)}
-              </p>
-            )}
-          </div>
+      </section>
+
+      <section className="py-8 md:py-10">
+        <div className="max-w-6xl mx-auto px-5 w-full text-center">
+          <h1 className="text-[22px] md:text-[34px] font-bold text-sage-900 leading-snug max-w-4xl mx-auto no-select">
+            {event.title}
+          </h1>
+          {event.date && (
+            <p className="text-sage-700 text-sm mt-3 no-select">
+              {formatDate(event.date)}
+            </p>
+          )}
         </div>
       </section>
 

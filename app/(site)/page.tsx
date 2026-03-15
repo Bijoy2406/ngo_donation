@@ -9,7 +9,7 @@ import FAQSection from "@/components/sections/FAQSection";
 import ContactStrip from "@/components/sections/ContactStrip";
 import { getHomePageData } from "@/sanity/lib/queries";
 
-export const revalidate = 3600;
+export const revalidate = 0;
 
 export default async function HomePage() {
   const { settings, featuredEvents, carouselItems, mission, impactItems, faqItems } =

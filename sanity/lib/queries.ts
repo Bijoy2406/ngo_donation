@@ -12,6 +12,8 @@ import type {
   DonationSettings,
 } from "@/types";
 
+const CACHE_REVALIDATE_SECONDS = process.env.NODE_ENV === "production" ? 3600 : 1;
+
 // ---------------------------------------------------------------------------
 // Individual cached query functions
 // ---------------------------------------------------------------------------
@@ -42,7 +44,7 @@ export const getSiteSettings = cache(
       }`);
     },
     ["site-settings"],
-    { revalidate: 3600, tags: ["siteSettings"] }
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["siteSettings"] }
   )
 );
 
@@ -59,7 +61,7 @@ export const getFeaturedEvents = cache(
       }`);
     },
     ["featured-events"],
-    { revalidate: 3600, tags: ["events"] }
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["events"] }
   )
 );
 
@@ -77,7 +79,7 @@ export const getAllEvents = cache(
       }`);
     },
     ["all-events"],
-    { revalidate: 3600, tags: ["events"] }
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["events"] }
   )
 );
 
@@ -99,7 +101,7 @@ export const getEventBySlug = cache(async (slug: string): Promise<Event | null> 
       );
     },
     ["event", slug],
-    { revalidate: 3600, tags: ["events"] }
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["events"] }
   );
   return fetcher();
 });
@@ -116,7 +118,7 @@ export const getTeamMembers = cache(
       }`);
     },
     ["team-members"],
-    { revalidate: 3600, tags: ["team"] }
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["team"] }
   )
 );
 
@@ -132,7 +134,7 @@ export const getCarouselItems = cache(
       }`);
     },
     ["carousel-items"],
-    { revalidate: 3600, tags: ["carousel"] }
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["carousel"] }
   )
 );
 
@@ -147,7 +149,7 @@ export const getMission = cache(
       }`);
     },
     ["mission"],
-    { revalidate: 3600, tags: ["mission"] }
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["mission"] }
   )
 );
 
@@ -163,7 +165,7 @@ export const getImpactItems = cache(
       }`);
     },
     ["impact-items"],
-    { revalidate: 3600, tags: ["impact"] }
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["impact"] }
   )
 );
 
@@ -178,7 +180,7 @@ export const getFAQItems = cache(
       }`);
     },
     ["faq-items"],
-    { revalidate: 3600, tags: ["faq"] }
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["faq"] }
   )
 );
 
@@ -197,7 +199,7 @@ export const getDonationSettings = cache(
       }`);
     },
     ["donation-settings"],
-    { revalidate: 3600, tags: ["donation"] }
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["donation"] }
   )
 );
 
@@ -274,7 +276,7 @@ export const getHomePageData = cache(
     },
     ["home-page-data"],
     {
-      revalidate: 3600,
+      revalidate: CACHE_REVALIDATE_SECONDS,
       tags: ["siteSettings", "events", "carousel", "mission", "impact", "faq"],
     }
   )

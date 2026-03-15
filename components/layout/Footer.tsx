@@ -15,7 +15,7 @@ export default function Footer({ settings }: FooterProps) {
         {/* Brand */}
         <div>
           <p className="font-bold text-white text-base mb-3">
-            Farzana Afroz Foundation
+            Farhana Afroz Foundation
           </p>
           <p className="text-sm text-sage-300 leading-relaxed max-w-xs">
             Empowering communities through education, health, and meaningful
@@ -128,7 +128,7 @@ export default function Footer({ settings }: FooterProps) {
       {/* Bottom Bar */}
       <div className="border-t border-sage-800">
         <div className="max-w-6xl mx-auto px-5 py-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-sage-500">
-          <p>&copy; {year} Farzana Afroz Foundation. All rights reserved.</p>
+          <p>&copy; {year} Farhana Afroz Foundation. All rights reserved.</p>
           <p>
             Built with dedication for a better community.
           </p>

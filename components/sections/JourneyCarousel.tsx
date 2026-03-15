@@ -25,7 +25,6 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
       : (placeholderItems as unknown as CarouselItem[]);
 
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
@@ -43,13 +42,13 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
   }, [displayItems.length]);
 
   useEffect(() => {
-    if (isPaused || touchStart !== null) return;
+    if (touchStart !== null) return;
     if (displayItems.length < 2) return;
     const id = setInterval(() => {
       nextEvent();
     }, 5500); // Autoplay 5.5s
     return () => clearInterval(id);
-  }, [displayItems.length, isPaused, nextEvent]);
+  }, [displayItems.length, nextEvent, touchStart]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -104,8 +103,8 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
             <h2 className="text-[32px] md:text-[42px] font-bold text-sage-900 leading-tight">
               Our <span className="bg-clip-text text-transparent bg-gradient-to-r from-sage-600 to-sage-400">Journey</span>
             </h2>
-            <p className="text-sage-700 mt-2 text-base max-w-lg">
-              Hover over the image to pause the slideshow. Navigate through our moments using the arrows.
+            <p className="mt-3 text-sm md:text-base text-sage-700">
+              Slideshow plays automatically. Use arrows, dots, or swipe to navigate through our moments.
             </p>
           </header>
         </ScrollReveal>
@@ -113,17 +112,9 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
         {/* Spotlight Carousel Wrapper */}
         <ScrollReveal>
           <div
-            className="group relative w-full aspect-[4/3] md:aspect-[21/9] rounded-[24px] overflow-hidden shadow-2xl bg-sage-200"
+            className="relative w-full aspect-[4/3] md:aspect-[21/9] rounded-[24px] overflow-hidden shadow-2xl bg-sage-200"
             role="region"
             aria-label="Journey Image Carousel"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-            onFocus={() => setIsPaused(true)}
-            onBlur={(e) => {
-              if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-                setIsPaused(false);
-              }
-            }}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -151,7 +142,7 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
                   }`}
                   aria-hidden={!active}
                 >
-                  {/* Background Image with slow zoom effect when active */}
+                  {/* Background Image */}
                   {hasImage ? (
                     <Image
                       src={imageUrl}
@@ -160,34 +151,32 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
                       priority={i === 0}
                       placeholder={blurUrl ? "blur" : "empty"}
                       blurDataURL={blurUrl}
-                      className={`object-cover transition-transform duration-[8s] ease-out ${
-                        active ? "scale-105" : "scale-100"
-                      }`}
+                      className="object-cover"
                       sizes="(max-width: 1024px) 100vw, 1200px"
                     />
                   ) : (
-                    <div className={`absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-4xl md:text-5xl no-select transition-transform duration-[8s] ease-out ${active ? "scale-105" : "scale-100"}`}>
+                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-4xl md:text-5xl no-select">
                       1600 x 800
                     </div>
                   )}
                   
                   {/* Dark Gradient Overlay for text readability */}
-                  <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500 ${
-                    active ? "opacity-0 group-hover:opacity-100" : "opacity-0"
+                  <div className={`absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/95 via-black/50 to-transparent transition-opacity duration-500 ${
+                    active ? "opacity-100" : "opacity-0"
                   }`} />
 
                   {/* Text Details Overlay */}
-                  <div 
-                    className={`absolute inset-x-0 bottom-0 p-6 md:p-12 flex flex-col justify-end transform transition-all duration-500 ease-out ${
-                      active ? "translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100" : "translate-y-8 opacity-0"
+                  <div
+                    className={`absolute inset-x-0 bottom-0 z-20 pointer-events-none p-6 md:p-12 flex flex-col justify-end transform transition-all duration-500 ease-out ${
+                      active ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
                     }`}
                   >
                     <div className="max-w-2xl">
-                      <h3 className="text-3xl md:text-5xl font-bold text-white mb-3 tracking-tight [text-shadow:_0_2px_10px_rgb(0_0_0_/_40%)]">
+                      <h3 className="text-3xl md:text-5xl font-bold text-white mb-3 tracking-tight drop-shadow-lg [text-shadow:_0_4px_16px_rgba(0,0,0,0.9)]">
                         {item.heading}
                       </h3>
                       {item.subheading && (
-                        <p className="text-white/90 text-lg md:text-xl font-medium leading-relaxed [text-shadow:_0_1px_5px_rgb(0_0_0_/_40%)]">
+                        <p className="text-white text-lg md:text-xl font-semibold leading-relaxed drop-shadow-md [text-shadow:_0_2px_12px_rgba(0,0,0,0.9)]">
                           {item.subheading}
                         </p>
                       )}
@@ -205,7 +194,7 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
                 prevEvent();
               }}
               disabled={displayItems.length < 2}
-              className="hidden lg:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-gray-500/40 bg-gray-800/60 backdrop-blur-md shadow-lg items-center justify-center text-white hover:bg-sage-600 hover:border-sage-600 transition-all duration-300 disabled:opacity-50 opacity-0 group-hover:opacity-100"
+              className="hidden lg:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-gray-500/40 bg-gray-800/60 backdrop-blur-md shadow-lg items-center justify-center text-white transition-all duration-300 disabled:opacity-50 opacity-100"
             >
               <HiChevronLeft size={24} />
             </button>
@@ -217,7 +206,7 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
                 nextEvent();
               }}
               disabled={displayItems.length < 2}
-              className="hidden lg:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-gray-500/40 bg-gray-800/60 backdrop-blur-md shadow-lg items-center justify-center text-white hover:bg-sage-600 hover:border-sage-600 transition-all duration-300 disabled:opacity-50 opacity-0 group-hover:opacity-100"
+              className="hidden lg:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-gray-500/40 bg-gray-800/60 backdrop-blur-md shadow-lg items-center justify-center text-white transition-all duration-300 disabled:opacity-50 opacity-100"
             >
               <HiChevronRight size={24} />
             </button>
@@ -234,7 +223,7 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
               className={`h-2 rounded-full transition-all duration-300 ${
                 i === currentIdx
                   ? "bg-sage-600 w-8"
-                  : "bg-sage-300 w-2.5 hover:bg-sage-400"
+                  : "bg-sage-300 w-2.5"
               }`}
             />
           ))}

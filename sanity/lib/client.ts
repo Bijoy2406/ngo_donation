@@ -7,6 +7,7 @@ const dataset =
   process.env.NEXT_PUBLIC_SANITY_DATASET ??
   process.env.SANITY_STUDIO_DATASET;
 const apiVersion = "2024-01-01";
+const isProduction = process.env.NODE_ENV === "production";
 
 if (!projectId || !dataset) {
   throw new Error(
@@ -18,8 +19,9 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  useCdn: isProduction,
 });
+
 
 // Server-only client with write token — never import in client components
 export const serverClient = createClient({
@@ -27,5 +29,6 @@ export const serverClient = createClient({
   dataset,
   apiVersion,
   token: process.env.SANITY_API_TOKEN,
-  useCdn: true,
+  // In local/dev we disable CDN so Studio publishes are reflected immediately.
+  useCdn: isProduction,
 });

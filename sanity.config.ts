@@ -4,11 +4,13 @@ import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./sanity/schemaTypes";
 
 const projectId =
-  process.env.SANITY_STUDIO_PROJECT_ID ??
-  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+  process.env.SANITY_STUDIO_PROJECT_ID ||
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+  "xnrhf9do";
 const dataset =
-  process.env.SANITY_STUDIO_DATASET ??
-  process.env.NEXT_PUBLIC_SANITY_DATASET;
+  process.env.SANITY_STUDIO_DATASET ||
+  process.env.NEXT_PUBLIC_SANITY_DATASET ||
+  "production";
 
 if (!projectId || !dataset) {
   throw new Error(
@@ -55,7 +57,7 @@ const plugins = [
 
 export default defineConfig({
   name: "faf-studio",
-  title: "Farzana Afroz Foundation",
+  title: "Farhana Afroz Foundation",
   projectId,
   dataset,
   plugins,

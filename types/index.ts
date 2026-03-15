@@ -99,6 +99,9 @@ export interface DonationSettings {
   bankName: string;
   accountName: string;
   accountNumber: string;
+  swiftCode?: string;
+  routingNumber?: string;
+  branchName?: string;
   qrCode?: CMSImage;
 }
 
