@@ -10,11 +10,16 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Farzana Afroz Foundation",
+  title: "Farhana Afroz Foundation",
   description:
     "Empowering communities through education, health, and meaningful action.",
+  icons: {
+    icon: "/1000055988-removebg-preview.png",
+    shortcut: "/1000055988-removebg-preview.png",
+    apple: "/1000055988-removebg-preview.png",
+  },
   openGraph: {
-    title: "Farzana Afroz Foundation",
+    title: "Farhana Afroz Foundation",
     description: "Empowering communities through meaningful action.",
     type: "website",
   },

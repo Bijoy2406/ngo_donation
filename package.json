@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "dev:web": "next dev --turbopack",
+    "dev": "next dev",
+    "dev:web": "next dev",
+    "dev:turbo": "next dev --turbopack",
+    "dev:web:turbo": "next dev --turbopack",
     "dev:studio": "sanity dev --port 3333",
     "build": "next build",
     "build:studio": "sanity build",

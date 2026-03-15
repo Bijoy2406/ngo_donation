@@ -15,11 +15,11 @@ export default function AboutSection({ settings }: AboutSectionProps) {
     settings?.aboutHeading ?? "We believe in the power of community.";
   const description =
     settings?.aboutDescription ??
-    "Farzana Afroz Foundation is dedicated to uplifting underprivileged communities through sustainable programs in education, healthcare, and social welfare. Since our establishment, we have worked tirelessly to create positive, lasting change in the lives of those who need it most.";
+    "Farhana Afroz Foundation (FAF) is a humanitarian organisation established in 2009 with the goal of providing meaningful support to individuals and families facing financial hardship, natural disasters, or lack of basic necessities. The foundation works actively through initiatives such as building homes, distributing food, and delivering flood relief. FAF believes that anyone genuinely in need deserves compassion and support, striving to create a safe space where people can seek help with dignity.";
 
-  const totalEvents = settings?.totalEvents ?? 0;
-  const peopleEngaged = settings?.peopleEngaged ?? 0;
-  const yearsActive = settings?.yearsActive ?? 0;
+  const totalEvents = settings?.totalEvents ?? 120;
+  const peopleEngaged = settings?.peopleEngaged ?? 25000;
+  const yearsActive = settings?.yearsActive ?? 17;
 
   // Split heading to colorize the last word
   const headingWords = heading.split(" ");

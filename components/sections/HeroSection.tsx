@@ -32,10 +32,10 @@ export default function HeroSection({ settings }: HeroSectionProps) {
     : undefined;
 
   const heading =
-    settings?.heroHeading ?? "Empowering Communities, Changing Lives";
+    settings?.heroHeading ?? "Serving Humanity with Compassion & Integrity";
   const subheading =
     settings?.heroSubheading ??
-    "Join us in making a meaningful difference through education, health, and community development.";
+    "Providing meaningful support to individuals and families facing financial hardship, natural disasters, and lack of basic necessities since 2009.";
 
   return (
     <section

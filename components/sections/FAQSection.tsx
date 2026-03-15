@@ -13,30 +13,30 @@ interface FAQSectionProps {
 const defaultItems: FAQItem[] = [
   {
     _id: "faq1",
-    question: "How can I donate to the Foundation?",
+    question: "How can I donate to the Farhana Afroz Foundation?",
     answer:
-      "You can donate by clicking the 'Donate Now' button anywhere on our site. The donation modal provides bank transfer details and a QR code for your convenience.",
+      "You can donate by clicking the 'Donate Now' button on our website. The donation modal provides bank transfer details, including SWIFT and Routing numbers for international and local contributions.",
     order: 1,
   },
   {
     _id: "faq2",
-    question: "How are donations used?",
+    question: "What are the primary focus areas of the foundation?",
     answer:
-      "All donations are directed toward our core programs: educational scholarships, healthcare camps, and community development initiatives. We publish annual impact reports for full transparency.",
+      "Our core focus areas include emergency flood relief, housing support for the homeless, distribution of winter clothing and Ramadan food programs, and providing education and medical assistance to those in need.",
     order: 2,
   },
   {
     _id: "faq3",
-    question: "Can I volunteer with the Foundation?",
+    question: "How does the foundation ensure transparency?",
     answer:
-      "Yes! We welcome volunteers. Please reach out via our Contact page and our team will guide you through the volunteer onboarding process.",
+      "Transparency is one of our core values. We maintain honesty and accountability in all our activities, ensuring that all funds are distributed directly to welfare programs and relief campaigns.",
     order: 3,
   },
   {
     _id: "faq4",
-    question: "How can my organization partner with you?",
+    question: "Can I volunteer for disaster relief campaigns?",
     answer:
-      "We are open to partnerships with organizations that share our values. Contact us through the Contact page or email us directly for collaboration inquiries.",
+      "Absolutely! We have over 150 dedicated volunteers. If you wish to join our humanitarian efforts, please contact us through the Contact page.",
     order: 4,
   },
 ];
@@ -85,8 +85,8 @@ export default function FAQSection({ items }: FAQSectionProps) {
     <section className="py-[60px] bg-sage-50">
       <div className="max-w-4xl mx-auto px-5">
         <ScrollReveal>
-          <div className="text-center mb-8">
-            <p className="section-kicker text-sage-600 mb-1 justify-center">
+          <div className="text-left mb-10">
+            <p className="section-kicker text-sage-600 mb-1">
               FAQ
             </p>
             <h2 className="text-[32px] md:text-[42px] font-bold text-sage-900 leading-tight">

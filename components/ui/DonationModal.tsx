@@ -20,11 +20,15 @@ const defaultSettings: DonationSettings = {
   rules: [
     "All donations are voluntary.",
     "Please include your name in the transfer reference.",
-    "For large donations, please contact us directly.",
+    "For international transfers, please use the SWIFT code.",
+    "For any queries, please contact Farhana Afroz Foundation directly.",
   ],
-  bankName: "Your Bank Name",
-  accountName: "Farzana Afroz Foundation",
-  accountNumber: "XXXX-XXXX-XXXX",
+  bankName: "The City Bank Limited",
+  branchName: "Jamuna Future Park Branch",
+  accountName: "FARHANA AFRUZ URMI",
+  accountNumber: "2101906537001",
+  swiftCode: "CIBLBDDH",
+  routingNumber: "225260333",
 };
 
 export default function DonationModal({ settings }: DonationModalProps) {
@@ -99,6 +103,14 @@ export default function DonationModal({ settings }: DonationModalProps) {
                   <span className="font-medium text-sage-900">
                     {data.bankName}
                   </span>
+                  {data.branchName && (
+                    <>
+                      <span className="text-gray-500">Branch</span>
+                      <span className="font-medium text-sage-900">
+                        {data.branchName}
+                      </span>
+                    </>
+                  )}
                   <span className="text-gray-500">Account Name</span>
                   <span className="font-medium text-sage-900">
                     {data.accountName}
@@ -107,6 +119,22 @@ export default function DonationModal({ settings }: DonationModalProps) {
                   <span className="font-medium text-sage-900 tracking-wide">
                     {data.accountNumber}
                   </span>
+                  {data.swiftCode && (
+                    <>
+                      <span className="text-gray-500">SWIFT Code</span>
+                      <span className="font-medium text-sage-900 uppercase">
+                        {data.swiftCode}
+                      </span>
+                    </>
+                  )}
+                  {data.routingNumber && (
+                    <>
+                      <span className="text-gray-500">Routing No.</span>
+                      <span className="font-medium text-sage-900">
+                        {data.routingNumber}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
 

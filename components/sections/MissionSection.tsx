@@ -44,24 +44,25 @@ export default function MissionSectionComp({ mission }: MissionSectionProps) {
 
           {/* Text */}
           <ScrollReveal direction="left" delay={0.1} className="flex-1">
-            <p className="section-kicker text-sage-600 mb-2">
+            <p className="section-kicker text-sage-600 mb-1">
               Mission
             </p>
-            <h2 className="text-[22px] md:text-[26px] font-bold text-sage-900 mb-5">
-              {heading}
+            <h2 className="text-[32px] md:text-[42px] font-bold text-sage-900 leading-tight">
+              Our <span className="bg-clip-text text-transparent bg-gradient-to-r from-sage-600 to-sage-400">Mission</span>
             </h2>
             {hasDescription ? (
               <div className="prose-content">
                 <PortableText value={mission!.description} />
               </div>
             ) : (
-              <p className="text-gray-600 leading-relaxed text-[14px] md:text-[15px]">
-                Our mission is to empower underprivileged communities by
-                providing access to quality education, healthcare services,
-                and economic opportunities. We strive to build a more
-                equitable and compassionate society where every individual
-                has the resources they need to thrive.
-              </p>
+      <p className="text-gray-600 leading-relaxed text-[14px] md:text-[15px]">
+        To build a compassionate society where every vulnerable individual
+        receives the support, dignity, and opportunities needed to live a
+        better life. Our mission is to support communities by providing
+        humanitarian assistance, emergency relief, educational support for
+        children, and essential seasonal aid such as winter clothing and 
+        Ramadan iftar for those in need.
+      </p>
             )}
           </ScrollReveal>
         </div>

@@ -3,7 +3,10 @@
 import { useState, useEffect, useRef, type MouseEvent } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
+import { Lora } from "next/font/google";
 import { usePathname } from "next/navigation";
+import foundationLogo from "@/assets/1000055988-removebg-preview.png";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
 import { HiMenu, HiX } from "react-icons/hi";
 import {
@@ -35,6 +38,12 @@ const NAV_PILL_TRANSITION = {
 
 const isHomeSection = (value: string): value is HomeSection =>
   value === "about" || value === "mission";
+
+const brandFont = Lora({
+  subsets: ["latin"],
+  weight: ["600"],
+  display: "swap",
+});
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -271,12 +280,30 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className={cn(
-            "font-bold text-base tracking-tight transition-colors duration-300 [text-shadow:_0_1px_2px_rgb(255_255_255_/_60%)]",
-            isScrolled ? "text-sage-800" : "text-sage-900"
-          )}
+          className="flex items-center shrink-0"
+          aria-label="Farhana Afroz Foundation"
         >
-          Farzana Afroz Foundation
+          <Image
+            src={foundationLogo}
+            alt="Farhana Afroz Foundation"
+            width={40}
+            height={40}
+            className="h-15 w-15 object-contain -mt-2"
+            priority
+          />
+          <div
+            className="overflow-hidden ml-2"
+          >
+            <span
+              className={cn(
+                brandFont.className,
+                "block whitespace-nowrap text-sm sm:text-base tracking-[0.01em]",
+                isScrolled ? "text-sage-900" : "text-sage-800"
+              )}
+            >
+              Farhana Afroz Foundation
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Nav */}

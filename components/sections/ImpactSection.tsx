@@ -28,56 +28,77 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
 const defaultItems: ImpactItem[] = [
   {
     _id: "d1",
-    icon: "education",
-    heading: "Education Access",
-    description:
-      "Providing scholarships and learning resources to students who cannot afford quality education.",
+    icon: "hands",
+    heading: "Construction of homes for families without proper shelter",
+    description: "Construction of homes for families without proper shelter",
     order: 1,
   },
   {
     _id: "d2",
-    icon: "heart",
-    heading: "Healthcare Support",
-    description:
-      "Organizing free health camps and connecting communities with essential medical services.",
+    icon: "education",
+    heading: "Distribution of iftar meals during Ramadan to underprivileged communities",
+    description: "Distribution of iftar meals during Ramadan to underprivileged communities",
     order: 2,
   },
   {
     _id: "d3",
-    icon: "users",
-    heading: "Community Building",
-    description:
-      "Creating sustainable programs that strengthen social bonds and promote collective growth.",
+    icon: "star",
+    heading: "Flood relief support for disaster-affected families",
+    description: "Flood relief support for disaster-affected families",
     order: 3,
   },
   {
     _id: "d4",
     icon: "leaf",
-    heading: "Environmental Action",
-    description:
-      "Promoting clean environments through awareness campaigns and community-led initiatives.",
+    heading: "Winter clothing distribution for vulnerable populations",
+    description: "Winter clothing distribution for vulnerable populations",
     order: 4,
+  },
+  {
+    _id: "d5",
+    icon: "heart",
+    heading: "Support for children’s education",
+    description: "Support for children’s education",
+    order: 5,
+  },
+  {
+    _id: "d6",
+    icon: "users",
+    heading: "Providing medical assistance and medicines for those in need",
+    description: "Providing medical assistance and medicines for those in need",
+    order: 6,
   },
 ];
 
-export default function ImpactSection({ items }: ImpactSectionProps) {
-  const displayItems = items.length > 0 ? items : defaultItems;
+const visionStatement =
+  "To build a compassionate society where every vulnerable individual receives the support, dignity, and opportunities needed to live a better life.";
+
+const coreValues = [
+  "Compassion: Serving people with kindness, empathy, and respect.",
+  "Transparency: Maintaining honesty and accountability in all activities.",
+  "Community Support: Strengthening communities through collective care and responsibility.",
+  "Integrity: Acting with sincerity and ethical responsibility in all initiatives.",
+  "Inclusivity: Helping anyone who is genuinely in need without discrimination.",
+];
+
+export default function ImpactSection({ items: _items }: ImpactSectionProps) {
+  const displayItems = defaultItems;
 
   return (
     <section className="py-[60px] bg-white">
       <div className="max-w-6xl mx-auto px-5">
         <ScrollReveal>
-          <div className="text-center mb-10">
-            <p className="section-kicker text-sage-600 mb-1 justify-center">
-              Impact
+          <div className="text-left mb-10">
+            <p className="section-kicker text-sage-600 mb-1">
+              Achievements
             </p>
             <h2 className="text-[32px] md:text-[42px] font-bold text-sage-900 leading-tight">
-              Our Impact <span className="bg-clip-text text-transparent bg-gradient-to-r from-sage-600 to-sage-400">Areas</span>
+              Key <span className="bg-clip-text text-transparent bg-gradient-to-r from-sage-600 to-sage-400">Achievements</span>
             </h2>
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 mt-6 md:mt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 mt-6 md:mt-10">
           {displayItems.map((item, i) => {
             const stepNumber = String(i + 1).padStart(2, "0");
             return (
@@ -87,7 +108,7 @@ export default function ImpactSection({ items }: ImpactSectionProps) {
                     {stepNumber}
                   </div>
 
-                  <h3 className="font-bold text-sage-900 text-[18px] mb-3 leading-snug">
+                  <h3 className="font-bold text-sage-900 text-[18px] mb-2 leading-snug">
                     {item.heading}
                   </h3>
                   <p className="text-[14px] md:text-[15px] text-gray-600 leading-[1.7]">
@@ -98,6 +119,10 @@ export default function ImpactSection({ items }: ImpactSectionProps) {
             );
           })}
         </div>
+
+    
+
+        
       </div>
     </section>
   );
