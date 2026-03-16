@@ -32,20 +32,68 @@ export async function POST(request: NextRequest) {
   const safeEmail = email.slice(0, 200);
   const safeMessage = message.slice(0, 2000);
 
-  // TODO: Integrate your email service here.
-  // Options: Nodemailer + SMTP, Resend (resend.com), SendGrid, AWS SES.
-  //
-  // Example with Resend:
-  // import { Resend } from 'resend';
-  // const resend = new Resend(process.env.RESEND_API_KEY);
-  // await resend.emails.send({
-  //   from: 'noreply@yourdomain.com',
-  //   to: 'contact@yourdomain.com',
-  //   subject: `Contact form: ${safeName}`,
-  //   text: `From: ${safeName} <${safeEmail}>\n\n${safeMessage}`,
-  // });
+  const serviceId =
+    process.env.EMAILJS_SERVICE_ID ?? process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+  const templateId =
+    process.env.EMAILJS_TEMPLATE_ID ?? process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+  const publicKey =
+    process.env.EMAILJS_PUBLIC_KEY ?? process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
-  console.info("[Contact Form]", { name: safeName, email: safeEmail, message: safeMessage });
+  if (!serviceId || !templateId || !publicKey) {
+    console.error("[Contact Form] EmailJS env vars are missing.");
+    return NextResponse.json(
+      { error: "Contact service is not configured." },
+      { status: 500 }
+    );
+  }
 
-  return NextResponse.json({ success: true });
+  const emailJsPayload: Record<string, unknown> = {
+    service_id: serviceId,
+    template_id: templateId,
+    user_id: publicKey,
+    template_params: {
+      name: safeName,
+      email: safeEmail,
+      message: safeMessage,
+    },
+  };
+
+  // Optional but recommended for server-side calls.
+  if (privateKey) {
+    emailJsPayload.accessToken = privateKey;
+  }
+
+  try {
+    const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(emailJsPayload),
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("[Contact Form] EmailJS send failed", {
+        status: response.status,
+        response: errorText,
+      });
+
+      return NextResponse.json(
+        { error: "Failed to send email." },
+        { status: 502 }
+      );
+    }
+
+    console.info("[Contact Form] Email sent", { name: safeName, email: safeEmail });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("[Contact Form] EmailJS request error", error);
+    return NextResponse.json(
+      { error: "Failed to send email." },
+      { status: 502 }
+    );
+  }
 }

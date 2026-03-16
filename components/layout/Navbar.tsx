@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, type MouseEvent } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Lora } from "next/font/google";
+import { Cormorant_Garamond } from "next/font/google";
 import { usePathname } from "next/navigation";
 import foundationLogo from "@/assets/1000055988-removebg-preview.png";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
@@ -39,9 +39,9 @@ const NAV_PILL_TRANSITION = {
 const isHomeSection = (value: string): value is HomeSection =>
   value === "about" || value === "mission";
 
-const brandFont = Lora({
+const brandFont = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["600"],
+  weight: ["600", "700"],
   display: "swap",
 });
 
@@ -273,8 +273,8 @@ export default function Navbar() {
         className={cn(
           "max-w-6xl mx-auto h-[60px] flex items-center justify-between rounded-[20px] border transition-all duration-300 px-5",
           isScrolled
-            ? "bg-[#eef4ee]/95 border-sage-200 shadow-lg backdrop-blur-md"
-              : "bg-[#dce8df]/90 border-sage-300/80 shadow-md backdrop-blur-md"
+            ? "bg-[#f3eadb]/95 border-[#d5c3a8] shadow-[0_12px_26px_rgba(84,65,37,0.14)] backdrop-blur-md"
+              : "bg-[#efe3cf]/90 border-[#d9c8ad] shadow-[0_8px_18px_rgba(84,65,37,0.12)] backdrop-blur-md"
         )}
       >
         {/* Logo */}
@@ -291,17 +291,33 @@ export default function Navbar() {
             className="h-15 w-15 object-contain -mt-2"
             priority
           />
-          <div
-            className="overflow-hidden ml-2"
-          >
+          <div className="ml-2 flex flex-col leading-[1.02]">
             <span
               className={cn(
                 brandFont.className,
-                "block whitespace-nowrap text-sm sm:text-base tracking-[0.01em]",
+                "block text-[0.68rem] sm:text-[0.74rem] font-bold uppercase tracking-[0.18em]",
                 isScrolled ? "text-sage-900" : "text-sage-800"
               )}
             >
-              Farhana Afroz Foundation
+              Farhana
+            </span>
+            <span
+              className={cn(
+                brandFont.className,
+                "-mt-[0.1rem] block text-[0.68rem] sm:text-[0.74rem] font-bold uppercase tracking-[0.18em]",
+                isScrolled ? "text-sage-900" : "text-sage-800"
+              )}
+            >
+              Afroz
+            </span>
+            <span
+              className={cn(
+                brandFont.className,
+                "mt-[0.02rem] block text-[0.68rem] sm:text-[0.74rem] font-bold uppercase tracking-[0.18em]",
+                isScrolled ? "text-sage-900" : "text-sage-800"
+              )}
+            >
+              Foundation
             </span>
           </div>
         </Link>
@@ -375,7 +391,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {isMobileOpen && (
-        <div className="md:hidden absolute top-[66px] left-3 right-3 rounded-[16px] bg-white/95 backdrop-blur-md shadow-lg border border-sage-200">
+        <div className="md:hidden absolute top-[66px] left-3 right-3 rounded-[16px] border border-[#d8c6aa] bg-[#f7efe3]/95 shadow-[0_14px_28px_rgba(78,58,33,0.16)] backdrop-blur-md">
           <div className="flex flex-col px-5 py-4 gap-4">
             {navLinks.map((link) => {
               const isActive = isActiveLink(link.href);

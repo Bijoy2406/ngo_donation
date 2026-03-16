@@ -10,6 +10,36 @@ interface FormState {
   message: string;
 }
 
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+async function sendEmailJsFromBrowser(form: FormState): Promise<boolean> {
+  if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+    return false;
+  }
+
+  const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      service_id: EMAILJS_SERVICE_ID,
+      template_id: EMAILJS_TEMPLATE_ID,
+      user_id: EMAILJS_PUBLIC_KEY,
+      template_params: {
+        name: form.name.trim(),
+        email: form.email.trim(),
+        message: form.message.trim(),
+      },
+    }),
+    cache: "no-store",
+  });
+
+  return response.ok;
+}
+
 export default function ContactPage() {
   const [form, setForm] = useState<FormState>({
     name: "",
@@ -48,13 +78,30 @@ export default function ContactPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+
       if (res.ok) {
         setStatus("success");
         setForm({ name: "", email: "", message: "" });
       } else {
+        // Fallback path when EmailJS blocks non-browser API calls from server routes.
+        if (res.status === 502) {
+          const sentFromBrowser = await sendEmailJsFromBrowser(form);
+          if (sentFromBrowser) {
+            setStatus("success");
+            setForm({ name: "", email: "", message: "" });
+            return;
+          }
+        }
+
         setStatus("error");
       }
     } catch {
+      const sentFromBrowser = await sendEmailJsFromBrowser(form);
+      if (sentFromBrowser) {
+        setStatus("success");
+        setForm({ name: "", email: "", message: "" });
+        return;
+      }
       setStatus("error");
     }
   }
@@ -110,13 +157,7 @@ export default function ContactPage() {
                       info@farzanaarozfoundation.org
                     </a>
                   </li>
-                  <li className="flex gap-3 items-start text-sm text-gray-600">
-                    <FiPhone
-                      size={16}
-                      className="text-sage-500 mt-0.5 shrink-0"
-                    />
-                    <span>+880 1XXX-XXXXXX</span>
-                  </li>
+                
                   <li className="flex gap-3 items-start text-sm text-gray-600">
                     <FiMapPin
                       size={16}

@@ -13,7 +13,7 @@ export default function FeaturedEvents({ events }: FeaturedEventsProps) {
     <section id="events" className="py-[60px] bg-white">
       <div className="max-w-6xl mx-auto px-5">
         <ScrollReveal>
-          <div className="flex items-end justify-between mb-8">
+          <div className="mb-8 flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="section-kicker text-sage-600 mb-1">
                 Events
@@ -24,7 +24,7 @@ export default function FeaturedEvents({ events }: FeaturedEventsProps) {
             </div>
             <Link
               href="/events"
-              className="text-sm font-semibold text-sage-600 hover:text-sage-800 transition-colors"
+              className="inline-flex shrink-0 text-sm font-semibold text-sage-600 transition-colors hover:text-sage-800"
             >
               View All &rarr;
             </Link>
