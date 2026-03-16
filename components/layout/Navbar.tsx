@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Cormorant_Garamond } from "next/font/google";
 import { usePathname } from "next/navigation";
-import foundationLogo from "@/assets/1000055988-removebg-preview.png";
+import foundationLogo from "@/assets/Farhana Afroz Foundation_LogoMark-01.svg";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
 import { HiMenu, HiX } from "react-icons/hi";
 import {
@@ -286,9 +286,9 @@ export default function Navbar() {
           <Image
             src={foundationLogo}
             alt="Farhana Afroz Foundation"
-            width={40}
-            height={40}
-            className="h-15 w-15 object-contain -mt-2"
+            width={48}
+            height={48}
+            className="h-12 w-12 self-center object-contain"
             priority
           />
           <div className="ml-2 flex flex-col leading-[1.02]">
@@ -313,7 +313,7 @@ export default function Navbar() {
             <span
               className={cn(
                 brandFont.className,
-                "mt-[0.02rem] block text-[0.68rem] sm:text-[0.74rem] font-bold uppercase tracking-[0.18em]",
+                "mt-[0.03rem] block text-[0.78rem] sm:text-[0.78rem] font-bold uppercase tracking-[0.18em]",
                 isScrolled ? "text-sage-900" : "text-sage-800"
               )}
             >

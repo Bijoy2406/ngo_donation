@@ -14,9 +14,9 @@ export const metadata: Metadata = {
   description:
     "Empowering communities through education, health, and meaningful action.",
   icons: {
-    icon: "/1000055988-removebg-preview.png",
-    shortcut: "/1000055988-removebg-preview.png",
-    apple: "/1000055988-removebg-preview.png",
+    icon: "/Farhana Afroz Foundation_LogoMark-01.svg",
+    shortcut: "/Farhana Afroz Foundation_LogoMark-01.svg",
+    apple: "/Farhana Afroz Foundation_LogoMark-01.svg",
   },
   openGraph: {
     title: "Farhana Afroz Foundation",
