@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { descriptionBlock } from "./descriptionContent";
 
 export const missionSection = defineType({
   name: "missionSection",
@@ -6,23 +7,14 @@ export const missionSection = defineType({
   type: "document",
   fields: [
     defineField({ name: "heading", title: "Heading", type: "string" }),
+
     defineField({
       name: "description",
       title: "Mission Description",
       type: "array",
-      of: [
-        {
-          type: "block",
-          styles: [{ title: "Normal", value: "normal" }],
-          marks: {
-            decorators: [
-              { title: "Bold", value: "strong" },
-              { title: "Italic", value: "em" },
-            ],
-          },
-        },
-      ],
+      of: [descriptionBlock],
     }),
+
     defineField({
       name: "image",
       title: "Mission Image (Square)",
@@ -30,6 +22,7 @@ export const missionSection = defineType({
       options: { hotspot: true },
     }),
   ],
+
   preview: {
     prepare: () => ({ title: "Mission Section" }),
   },

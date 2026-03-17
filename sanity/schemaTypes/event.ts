@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { descriptionBlock } from "./descriptionContent";
 
 export const event = defineType({
   name: "event",
@@ -15,29 +16,14 @@ export const event = defineType({
     defineField({
       name: "shortDescription",
       title: "Short Description",
-      type: "text",
-      rows: 2,
+      type: "array",
+      of: [descriptionBlock],
     }),
     defineField({
       name: "description",
       title: "Full Description",
       type: "array",
-      of: [
-        {
-          type: "block",
-          styles: [
-            { title: "Normal", value: "normal" },
-            { title: "Heading", value: "h2" },
-            { title: "Subheading", value: "h3" },
-          ],
-          marks: {
-            decorators: [
-              { title: "Bold", value: "strong" },
-              { title: "Italic", value: "em" },
-            ],
-          },
-        },
-      ],
+      of: [descriptionBlock],
     }),
     defineField({
       name: "thumbnail",

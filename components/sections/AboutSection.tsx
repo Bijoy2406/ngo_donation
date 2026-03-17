@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import Counter from "@/components/ui/Counter";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import RichTextContent from "@/components/ui/RichTextContent";
 import type { SiteSettings } from "@/types";
 
 interface AboutSectionProps {
@@ -52,7 +52,7 @@ export default function AboutSection({ settings }: AboutSectionProps) {
                 </h2>
                 <Link
                   href="/team"
-                  className="mt-6 inline-flex items-center text-sm font-semibold text-sage-600 border border-sage-200 px-5 py-2.5 rounded-[8px] hover:bg-sage-50 hover:border-sage-400 transition-all duration-200"
+                  className="mt-6 inline-flex items-center text-sm font-semibold text-white bg-sage-500 px-5 py-2.5 rounded-[8px] hover:bg-sage-600 transition-colors self-start"
                 >
                   Meet Our Team &rarr;
                 </Link>
@@ -73,7 +73,7 @@ export default function AboutSection({ settings }: AboutSectionProps) {
                 <Counter
                   target={yearsActive}
                   label="Years Active"
-                  suffix=""
+                  suffix="+"
                 />
               </div>
             </div>
@@ -82,9 +82,10 @@ export default function AboutSection({ settings }: AboutSectionProps) {
           {/* Right — Description */}
           <ScrollReveal direction="right" delay={0.1}>
             <div className="bg-sage-50 rounded-[8px] p-6 md:p-8 h-full flex flex-col justify-between gap-8">
-              <p className="text-[14px] md:text-[15px] text-gray-600 leading-[1.75]">
-                {description}
-              </p>
+              <RichTextContent
+                value={description}
+                className="text-[14px] md:text-[15px] leading-[1.75]"
+              />
               <Link
                 href="/#mission"
                 className="inline-flex items-center text-sm font-semibold text-white bg-sage-500 px-5 py-2.5 rounded-[8px] hover:bg-sage-600 transition-colors self-start"

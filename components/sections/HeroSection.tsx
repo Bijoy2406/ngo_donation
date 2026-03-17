@@ -81,7 +81,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-[28px] md:text-[38px] lg:text-[46px] font-bold text-white leading-tight no-select"
+            className="text-[28px] md:text-[38px] lg:text-[46px] font-bold text-white leading-tight no-select "
           >
             {heading}
           </motion.h1>
@@ -90,7 +90,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.25 }}
-            className="text-white/85 text-sm md:text-base mt-4 leading-relaxed max-w-md no-select"
+            className="text-white/85 text-sm md:text-base mt-4 leading-relaxed max-w-md no-select text-justify"
           >
             {subheading}
           </motion.p>

@@ -38,6 +38,8 @@ export const getSiteSettings = cache(
         facebookUrl,
         twitterUrl,
         whatsappNumber,
+        bkashNumber,
+        nagadNumber,
         email,
         phone,
         address
@@ -234,6 +236,8 @@ export const getHomePageData = cache(
           facebookUrl,
           twitterUrl,
           whatsappNumber,
+          bkashNumber,
+          nagadNumber,
           email,
           phone,
           address

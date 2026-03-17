@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { descriptionBlock } from "./descriptionContent";
 
 export const siteSettings = defineType({
   name: "siteSettings",
@@ -25,8 +26,8 @@ export const siteSettings = defineType({
     defineField({
       name: "aboutDescription",
       title: "About Description",
-      type: "text",
-      rows: 4,
+      type: "array",
+      of: [descriptionBlock],
     }),
     defineField({
       name: "totalEvents",
@@ -62,6 +63,16 @@ export const siteSettings = defineType({
     defineField({
       name: "whatsappNumber",
       title: "WhatsApp Number (with country code, e.g. +8801XXXXXXXXX)",
+      type: "string",
+    }),
+    defineField({
+      name: "bkashNumber",
+      title: "bKash Number",
+      type: "string",
+    }),
+    defineField({
+      name: "nagadNumber",
+      title: "Nagad Number",
       type: "string",
     }),
     defineField({

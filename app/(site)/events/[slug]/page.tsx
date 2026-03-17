@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { PortableText } from "@portabletext/react";
 import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import { getEventBySlug, getAllEvents } from "@/sanity/lib/queries";
 import { formatDate, simulateDelay } from "@/lib/utils";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import RichTextContent, {
+  hasRichTextContent,
+  richTextToPlainText,
+} from "@/components/ui/RichTextContent";
 
 export const revalidate = 3600;
 
@@ -23,7 +26,7 @@ export async function generateMetadata({
   if (!event) return {};
   return {
     title: `${event.title} | Farzana Afroz Foundation`,
-    description: event.shortDescription,
+    description: richTextToPlainText(event.shortDescription),
   };
 }
 
@@ -79,14 +82,10 @@ export default async function EventDetailPage({
       <section className="py-[60px]">
         <div className="max-w-3xl mx-auto px-5">
           <ScrollReveal>
-            {event.description && event.description.length > 0 ? (
-              <div className="prose-content">
-                <PortableText value={event.description} />
-              </div>
-            ) : event.shortDescription ? (
-              <p className="text-gray-600 leading-relaxed text-[15px]">
-                {event.shortDescription}
-              </p>
+            {hasRichTextContent(event.description) ? (
+              <RichTextContent value={event.description} className="text-[15px]" />
+            ) : hasRichTextContent(event.shortDescription) ? (
+              <RichTextContent value={event.shortDescription} className="text-[15px]" />
             ) : null}
           </ScrollReveal>
         </div>

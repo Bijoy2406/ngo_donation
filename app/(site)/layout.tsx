@@ -30,7 +30,11 @@ export default async function SiteLayout({
       </main>
       <Footer settings={siteSettings} />
       <FloatingActions whatsapp={siteSettings?.whatsappNumber} />
-      <DonationModal settings={donationSettings} />
+      <DonationModal
+        settings={donationSettings}
+        bkashNumber={siteSettings?.bkashNumber}
+        nagadNumber={siteSettings?.nagadNumber}
+      />
       </DonationModalProvider>
     </Providers>
   );
