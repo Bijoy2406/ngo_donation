@@ -1,9 +1,5 @@
 import type { NextConfig } from "next";
 
-const studioUrl =
-  process.env.NEXT_PUBLIC_STUDIO_URL?.replace(/\/$/, "") ??
-  process.env.STUDIO_URL?.replace(/\/$/, "");
-
 const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
@@ -29,8 +25,9 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          // Note: X-Frame-Options is removed here to allow Sanity's embedded 
+          // features (like previews) to function correctly on your domain.
         ],
       },
       {
@@ -53,24 +50,8 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  async redirects() {
-    if (!studioUrl) {
-      return [];
-    }
-
-    return [
-      {
-        source: "/studio",
-        destination: studioUrl,
-        permanent: false,
-      },
-      {
-        source: "/studio/:path*",
-        destination: `${studioUrl}/:path*`,
-        permanent: false,
-      },
-    ];
-  },
+  // Redirects removed to allow app/studio/[[...tool]]/page.tsx to render 
+  // the Studio directly on your domain.
 };
 
 export default nextConfig;
