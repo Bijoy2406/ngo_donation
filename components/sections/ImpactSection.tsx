@@ -2,13 +2,16 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import type { ImpactItem } from "@/types";
 import { cn } from "@/lib/utils";
 import { Manrope } from "next/font/google";
+import { Snowflake } from "lucide-react";
 import {
   HiOutlineAcademicCap,
   HiOutlineGlobeAlt,
   HiOutlineHeart,
   HiOutlineHome,
+  HiOutlinePlusCircle,
   HiOutlineSparkles,
   HiOutlineSun,
+  HiOutlineUser,
   HiOutlineUserGroup,
 } from "react-icons/hi2";
 
@@ -25,6 +28,12 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
   star: HiOutlineSparkles,
   hands: HiOutlineHome,
   leaf: HiOutlineSun,
+  woman: HiOutlineUser,
+  community: HiOutlineUserGroup,
+  firstAid: HiOutlinePlusCircle,
+  graduation: HiOutlineAcademicCap,
+  snowflake: Snowflake,
+  global: HiOutlineGlobeAlt,
 };
 
 const achievementFont = Manrope({
@@ -43,42 +52,42 @@ const defaultItems: ImpactItem[] = [
   },
   {
     _id: "d2",
-    icon: "education",
+    icon: "community",
     heading: "Distribution of iftar meals during Ramadan to underprivileged communities",
     description: "",
     order: 2,
   },
   {
     _id: "d3",
-    icon: "star",
+    icon: "global",
     heading: "Flood relief support for disaster-affected families",
     description: "",
     order: 3,
   },
   {
     _id: "d6",
-    icon: "users",
+    icon: "firstAid",
     heading: "Providing medical assistance & medicines for those in need",
     description: "",
     order: 6,
   },
   {
     _id: "d5",
-    icon: "heart",
+    icon: "graduation",
     heading: "Support for children’s education",
     description: "",
     order: 5,
   },
   {
     _id: "d4",
-    icon: "leaf",
+    icon: "snowflake",
     heading: "Winter clothing distribution for vulnerable populations",
     description: "",
     order: 4,
   },
   {
     _id: "d7",
-    icon: "globe",
+    icon: "woman",
     heading:
       "Women's hygiene support initiatives, including large-scale distribution of sanitary napkins during flood emergencies",
     description: "",
@@ -119,7 +128,7 @@ export default function ImpactSection({ items }: ImpactSectionProps) {
             <p className="section-kicker mb-2 text-[#567a64]">
               Achievements
             </p>
-            <h2 className="text-[34px] font-extrabold leading-[1.04] tracking-[-0.02em] text-[#173b2d] md:text-[48px]">
+            <h2 className="text-[34px] font-extrabold leading-[1.04] tracking-[-0.02em] text-[#173b2d] text-justify md:text-[48px]">
               Key <span className="text-[#4f7a63]">Achievements</span>
             </h2>
           </div>
@@ -148,7 +157,7 @@ export default function ImpactSection({ items }: ImpactSectionProps) {
                   <div
                     className={cn(
                       "relative z-10",
-                      "inline-flex h-11 w-11 items-center justify-center rounded-full border",
+                      "flex h-11 w-11 min-h-11 min-w-11 shrink-0 aspect-square items-center justify-center rounded-full border",
                       "border-[#c7d8cc] bg-[#f2f7f2] text-[#285540]"
                     )}
                   >
@@ -157,7 +166,7 @@ export default function ImpactSection({ items }: ImpactSectionProps) {
 
                   <h3
                     className={cn(
-                      "relative z-10 mt-5 max-w-[30ch] text-[17px] font-bold leading-[1.4] tracking-[-0.01em] text-[#173b2c] sm:text-[18px]"
+                      "relative z-10 mt-5 text-[17px] font-bold leading-[1.4] tracking-[-0.01em] text-[#173b2c] text-justify sm:text-[18px]"
                     )}
                   >
                     {getCardText(item)}

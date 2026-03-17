@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { PortableText } from "@portabletext/react";
 import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import RichTextContent, { hasRichTextContent } from "@/components/ui/RichTextContent";
 import type { MissionSection } from "@/types";
 
 interface MissionSectionProps {
@@ -16,7 +16,7 @@ export default function MissionSectionComp({ mission }: MissionSectionProps) {
   const blurUrl = hasImage ? getBlurUrl(mission!.image!) : undefined;
 
   const heading = mission?.heading ?? "Our Mission";
-  const hasDescription = mission?.description && mission.description.length > 0;
+  const hasDescription = hasRichTextContent(mission?.description);
 
   return (
     <section id="mission" className="scroll-mt-28 py-[60px] bg-sage-50">
@@ -51,11 +51,9 @@ export default function MissionSectionComp({ mission }: MissionSectionProps) {
               Our <span className="bg-clip-text text-transparent bg-gradient-to-r from-sage-600 to-sage-400">Mission</span>
             </h2>
             {hasDescription ? (
-              <div className="prose-content">
-                <PortableText value={mission!.description} />
-              </div>
+              <RichTextContent value={mission!.description} />
             ) : (
-      <p className="text-gray-600 leading-relaxed text-[14px] md:text-[15px]">
+      <p className="text-gray-600 leading-relaxed text-[14px] md:text-[15px] ">
         To build a compassionate society where every vulnerable individual
         receives the support, dignity, and opportunities needed to live a
         better life. Our mission is to support communities by providing

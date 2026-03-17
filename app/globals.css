@@ -98,6 +98,10 @@ section.bg-sage-50 {
   box-shadow: 0 0 0 5px rgba(15, 111, 104, 0.12);
 }
 
+.section-kicker--light::before {
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.25);
+}
+
 .text-shadow-soft {
   text-shadow: 0 4px 14px rgba(7, 48, 44, 0.28);
 }

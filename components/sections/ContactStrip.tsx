@@ -12,7 +12,7 @@ export default function ContactStrip() {
 
             <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
               <div className="max-w-2xl">
-                <p className="section-kicker text-white/85 mb-2">Contact Us</p>
+                <p className="section-kicker section-kicker--light text-white/85 mb-2">Contact Us</p>
                 <h3 className="text-[24px] md:text-[32px] font-bold text-white leading-tight text-shadow-soft">
                   Let us build meaningful change together.
                 </h3>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import { formatDate } from "@/lib/utils";
+import { richTextToPlainText } from "@/components/ui/RichTextContent";
 import type { Event } from "@/types";
 
 interface EventCardProps {
@@ -22,6 +23,7 @@ export default function EventCard({ event }: EventCardProps) {
     : "";
 
   const blurUrl = hasImage ? getBlurUrl(event.thumbnail!) : undefined;
+  const shortDescription = richTextToPlainText(event.shortDescription);
 
   return (
     <article className="group bg-white rounded-[8px] shadow-card overflow-hidden hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 border border-transparent hover:border-sage-200">
@@ -56,9 +58,9 @@ export default function EventCard({ event }: EventCardProps) {
         <h3 className="text-base font-bold text-sage-900 mb-2 leading-snug line-clamp-2">
           {event.title}
         </h3>
-        {event.shortDescription && (
+        {shortDescription && (
           <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-2">
-            {event.shortDescription}
+            {shortDescription}
           </p>
         )}
         <Link

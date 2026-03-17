@@ -27,7 +27,7 @@ export interface SiteSettings {
   heroSubheading: string;
   heroImage?: CMSImage;
   aboutHeading: string;
-  aboutDescription: string;
+  aboutDescription: PortableTextBlock[] | string;
   totalEvents: number;
   peopleEngaged: number;
   yearsActive: number;
@@ -35,6 +35,8 @@ export interface SiteSettings {
   facebookUrl?: string;
   twitterUrl?: string;
   whatsappNumber?: string;
+  bkashNumber?: string;
+  nagadNumber?: string;
   email?: string;
   phone?: string;
   address?: string;
@@ -44,8 +46,8 @@ export interface Event {
   _id: string;
   title: string;
   slug: { current: string };
-  shortDescription: string;
-  description: PortableTextBlock[];
+  shortDescription: PortableTextBlock[] | string;
+  description: PortableTextBlock[] | string;
   thumbnail: CMSImage;
   gallery?: CMSImage[];
   date: string;
@@ -72,7 +74,7 @@ export interface CarouselItem {
 export interface MissionSection {
   _id: string;
   heading: string;
-  description: PortableTextBlock[];
+  description: PortableTextBlock[] | string;
   image: CMSImage;
 }
 

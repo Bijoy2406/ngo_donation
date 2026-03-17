@@ -10,6 +10,8 @@ import type { DonationSettings } from "@/types";
 
 interface DonationModalProps {
   settings: DonationSettings | null;
+  bkashNumber?: string;
+  nagadNumber?: string;
 }
 
 const defaultSettings: DonationSettings = {
@@ -31,7 +33,11 @@ const defaultSettings: DonationSettings = {
   routingNumber: "225260333",
 };
 
-export default function DonationModal({ settings }: DonationModalProps) {
+export default function DonationModal({
+  settings,
+  bkashNumber,
+  nagadNumber,
+}: DonationModalProps) {
   const { isOpen, closeModal } = useDonationModal();
   const data = settings ?? defaultSettings;
 
@@ -137,6 +143,32 @@ export default function DonationModal({ settings }: DonationModalProps) {
                   )}
                 </div>
               </div>
+
+              {(bkashNumber || nagadNumber) && (
+                <div className="bg-sage-50 rounded-[8px] p-4 space-y-2.5">
+                  <p className="text-xs font-semibold text-sage-600 uppercase tracking-wide">
+                    Mobile Banking
+                  </p>
+                  <div className="grid grid-cols-2 gap-y-2 text-sm">
+                    {bkashNumber && (
+                      <>
+                        <span className="text-gray-500">bKash</span>
+                        <span className="font-medium text-sage-900 tracking-wide">
+                          {bkashNumber}
+                        </span>
+                      </>
+                    )}
+                    {nagadNumber && (
+                      <>
+                        <span className="text-gray-500">Nagad</span>
+                        <span className="font-medium text-sage-900 tracking-wide">
+                          {nagadNumber}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* QR Code */}
               {data.qrCode && (
