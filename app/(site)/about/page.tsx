@@ -126,7 +126,7 @@ export default async function AboutPage() {
               <div className="relative rounded-[20px] overflow-hidden shadow-xl border-4 border-white">
                 <div className="aspect-[3/4] relative">
                   <Image
-                    src="/assets/copy_868C3A4F-336C-458E-BCDB-02670026C860.PNG"
+            src="/assets/CEO (2).jpg"
                     alt="Farhana Afroz - Founder & Chairman"
                     fill
                     className="object-cover object-center"
