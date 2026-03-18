@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Cormorant_Garamond } from "next/font/google";
 import { usePathname } from "next/navigation";
-import foundationLogo from "@/assets/Farhana Afroz Foundation_LogoMark-01.svg";
+import foundationLogo from "@/public/assets/Farhana Afroz Foundation_LogoMark-01.svg";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
 import { HiMenu, HiX } from "react-icons/hi";
 import {

@@ -26,7 +26,7 @@ export default async function AboutPage() {
 
   return (
     <>
-      <section className="pt-28 pb-10 bg-sage-50">
+      <section className="pt-16 pb-6 bg-sage-50">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal>
             <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest mb-2">
@@ -39,10 +39,10 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="pb-8 bg-white">
+      <section className="pb-6 bg-white">
         <div className="max-w-6xl mx-auto px-5">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 -mt-2">
-            <ScrollReveal className="lg:col-span-8 rounded-[14px] border border-sage-100 bg-white shadow-card p-6 md:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 -mt-2">
+            <ScrollReveal className="lg:col-span-8 rounded-[14px] border border-sage-100 bg-white shadow-card p-4 md:p-6">
               <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest mb-3">
                 Who We Are
               </p>
@@ -72,19 +72,19 @@ export default async function AboutPage() {
               </div>
             </ScrollReveal>
 
-            <div className="lg:col-span-4 flex flex-col gap-6">
-              <ScrollReveal delay={0.05} className="rounded-[14px] border border-sage-100 bg-sage-50 p-5 md:p-6">
-                <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest mb-5">
+            <div className="lg:col-span-4 flex flex-col gap-4">
+              <ScrollReveal delay={0.05} className="rounded-[14px] border border-sage-100 bg-sage-50 p-4 md:p-5">
+                <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest mb-4">
                   Foundation Snapshot
                 </p>
-                <div className="space-y-5">
+                <div className="space-y-4">
                   <Counter target={totalEvents} label="Events" suffix="+" />
                   <Counter target={peopleEngaged} label="People Impacted" suffix="+" />
                   <Counter target={yearsActive} label="Years Active" suffix="+" />
                 </div>
               </ScrollReveal>
 
-              <ScrollReveal delay={0.1} className="rounded-[14px] border border-sage-100 bg-white p-5 md:p-6">
+              <ScrollReveal delay={0.1} className="rounded-[14px] border border-sage-100 bg-white p-4 md:p-5">
                 <p className="text-sm font-semibold text-sage-900 mb-2">Driven by dignity</p>
                 <p className="text-sm text-gray-600 leading-relaxed">
                   We work directly with communities to deliver practical support with
@@ -109,18 +109,18 @@ export default async function AboutPage() {
       </section>
 
       {/* Our Founder Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-b from-white to-sage-50">
+      <section className="py-10 md:py-14 bg-gradient-to-b from-white to-sage-50">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal>
             <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest mb-2 text-center">
               Our Leader
             </p>
-            <h2 className="text-[32px] md:text-[40px] font-bold text-sage-900 text-center mb-12 md:mb-16">
+            <h2 className="text-[32px] md:text-[40px] font-bold text-sage-900 text-center mb-8 md:mb-10">
               Meet Our Founder
             </h2>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
             {/* Image Column */}
             <ScrollReveal className="lg:col-span-5" delay={0.1}>
               <div className="relative rounded-[20px] overflow-hidden shadow-xl border-4 border-white">
