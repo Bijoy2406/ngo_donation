@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Counter from "@/components/ui/Counter";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import RichTextContent from "@/components/ui/RichTextContent";
@@ -103,6 +104,95 @@ export default async function AboutPage() {
                 </Link>
               </ScrollReveal>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Founder Section */}
+      <section className="py-16 md:py-20 bg-gradient-to-b from-white to-sage-50">
+        <div className="max-w-6xl mx-auto px-5">
+          <ScrollReveal>
+            <p className="text-xs font-semibold text-sage-500 uppercase tracking-widest mb-2 text-center">
+              Our Leader
+            </p>
+            <h2 className="text-[32px] md:text-[40px] font-bold text-sage-900 text-center mb-12 md:mb-16">
+              Meet Our Founder
+            </h2>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            {/* Image Column */}
+            <ScrollReveal className="lg:col-span-5" delay={0.1}>
+              <div className="relative rounded-[20px] overflow-hidden shadow-xl border-4 border-white">
+                <div className="aspect-[3/4] relative">
+                  <Image
+                    src="/assets/copy_868C3A4F-336C-458E-BCDB-02670026C860.PNG"
+                    alt="Farhana Afroz - Founder & Chairman"
+                    fill
+                    className="object-cover object-center"
+                    priority
+                  />
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-sage-900 via-sage-900/80 to-transparent p-6">
+                  <p className="text-white/90 text-sm font-medium tracking-wide">
+                    Founder & Chairman
+                  </p>
+                  <h3 className="text-white text-2xl font-bold">Farhana Afroz</h3>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Content Column */}
+            <ScrollReveal className="lg:col-span-7" delay={0.2}>
+              <div className="space-y-6">
+                <div>
+                  <p className="text-sage-500 text-sm font-semibold uppercase tracking-wider mb-1">
+                    Founder & Chairman
+                  </p>
+                  <h3 className="text-3xl md:text-4xl font-bold text-sage-900 mb-2">
+                    Farhana Afroz
+                  </h3>
+                  <p className="text-sage-600 text-lg font-medium">
+                    Founder & Chairman, Farhana Afroz Foundation (FAF)
+                  </p>
+                </div>
+
+                <div className="prose prose-sage max-w-none">
+                  <p className="text-gray-700 text-base leading-relaxed">
+                    Farhana Afroz is the Founder and Chairman of Farhana Afroz Foundation. Her journey in social work began when she was in Grade 7, driven by a deep sense of compassion and responsibility towards those in need.
+                  </p>
+                  
+                  <div className="my-6 h-px bg-gradient-to-r from-transparent via-sage-200 to-transparent"></div>
+                  
+                  <div className="space-y-4 text-gray-700 text-base leading-relaxed">
+                    <p>
+                      Farhana Afroz founded the Farhana Afroz Foundation with a vision to serve humanity and support vulnerable communities. Her passion for social work started at a very young age, when she began participating in charitable activities and helping people in need while still in Grade 7.
+                    </p>
+                    <p>
+                      With kindness and empathy at the core of her values, Farhana believes that true change begins with compassion and action. Over the years, she has led numerous humanitarian initiatives including flood relief efforts, iftar distributions, winter clothing programs, housing support for families, educational assistance for children, and medical aid for those who cannot afford treatment.
+                    </p>
+                    <p className="font-medium text-sage-700">
+                      Through her leadership, the foundation continues to grow and impact thousands of lives, guided by the belief that anyone who is genuinely in need deserves support and dignity. ✨🤍
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex flex-wrap gap-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 rounded-full bg-sage-100 flex items-center justify-center">
+                      <span className="text-sage-600 text-xl">✨</span>
+                    </div>
+                    <span className="text-sm text-gray-600">Compassion in Action</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 rounded-full bg-sage-100 flex items-center justify-center">
+                      <span className="text-sage-600 text-xl">🤍</span>
+                    </div>
+                    <span className="text-sm text-gray-600">Dignity for All</span>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
