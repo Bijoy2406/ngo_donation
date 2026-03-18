@@ -52,9 +52,15 @@ export default function AboutSection({ settings }: AboutSectionProps) {
                 </h2>
                 <Link
                   href="/team"
-                  className="mt-6 inline-flex items-center text-sm font-semibold text-white bg-sage-500 px-5 py-2.5 rounded-[8px] hover:bg-sage-600 transition-colors self-start"
+                  className="group mt-6 inline-flex items-center gap-1 text-sm font-semibold text-white bg-sage-500 px-5 py-2.5 rounded-[8px] hover:bg-sage-600 transition-colors self-start"
                 >
-                  Meet Our Team &rarr;
+                  <span>Meet Our Team</span>
+                  <span
+                    aria-hidden="true"
+                    className="transition-transform duration-200 group-hover:translate-x-1"
+                  >
+                    &rarr;
+                  </span>
                 </Link>
               </div>
 
@@ -88,9 +94,15 @@ export default function AboutSection({ settings }: AboutSectionProps) {
               />
               <Link
                 href="/#mission"
-                className="inline-flex items-center text-sm font-semibold text-white bg-sage-500 px-5 py-2.5 rounded-[8px] hover:bg-sage-600 transition-colors self-start"
+                className="group inline-flex items-center gap-1 text-sm font-semibold text-white bg-sage-500 px-5 py-2.5 rounded-[8px] hover:bg-sage-600 transition-colors self-start"
               >
-                Our Mission &rarr;
+                <span>Our Mission</span>
+                <span
+                  aria-hidden="true"
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                >
+                  &rarr;
+                </span>
               </Link>
             </div>
           </ScrollReveal>

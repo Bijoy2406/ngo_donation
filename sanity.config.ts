@@ -41,7 +41,7 @@ const plugins = [
             .child(
               S.document().schemaType("missionSection").documentId("missionSection")
             ),
-          S.documentTypeListItem("impactItem").title("Impact Cards"),
+          S.documentTypeListItem("keyAchievementItem").title("Key Achievements"),
           S.documentTypeListItem("faqItem").title("FAQ"),
           S.divider(),
           S.listItem()

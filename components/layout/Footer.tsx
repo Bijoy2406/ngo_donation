@@ -66,9 +66,9 @@ export default function Footer({ settings }: FooterProps) {
           <ul className="space-y-2.5">
             {[
               { href: "/", label: "Home" },
-              { href: "/#about", label: "About Us" },
+              { href: "/about", label: "About Us" },
               { href: "/events", label: "Events" },
-              { href: "/#mission", label: "Our Mission" },
+              { href: "/mission", label: "Our Mission" },
               { href: "/team", label: "Team" },
               { href: "/contact", label: "Contact" },
             ].map((link) => (

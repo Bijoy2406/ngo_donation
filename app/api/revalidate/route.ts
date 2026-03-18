@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
       revalidatePath("/", "page");
       break;
     case "impactItem":
+    case "keyAchievementItem":
       revalidateTag("impact");
       revalidatePath("/", "page");
       break;

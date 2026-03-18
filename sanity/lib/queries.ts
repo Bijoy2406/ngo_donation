@@ -158,7 +158,7 @@ export const getMission = cache(
 export const getImpactItems = cache(
   unstable_cache(
     async (): Promise<ImpactItem[]> => {
-      return serverClient.fetch(`*[_type == "impactItem"] | order(order asc){
+      return serverClient.fetch(`*[_type in ["keyAchievementItem", "impactItem"]] | order(order asc){
         _id,
         icon,
         heading,
@@ -263,7 +263,7 @@ export const getHomePageData = cache(
           description,
           image
         },
-        "impactItems": *[_type == "impactItem"] | order(order asc){
+        "impactItems": *[_type in ["keyAchievementItem", "impactItem"]] | order(order asc){
           _id,
           icon,
           heading,

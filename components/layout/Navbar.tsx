@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, type MouseEvent } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,27 +17,18 @@ import {
 
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/#about", label: "About Us" },
+  { href: "/about", label: "About Us" },
   { href: "/events", label: "Events" },
   { href: "/team", label: "Team" },
-  { href: "/#mission", label: "Mission" },
+  { href: "/mission", label: "Mission" },
   { href: "/contact", label: "Contact Us" },
 ];
-
-type HomeSection = "about" | "mission";
-
-const NAV_SCROLL_OFFSET = 108;
-const SECTION_PROBE_OFFSET = 24;
-const SCROLL_ACTIVE_SYNC_DELAY_MS = 90;
 const NAV_PILL_TRANSITION = {
   type: "spring" as const,
   stiffness: 210,
   damping: 32,
   mass: 1,
 };
-
-const isHomeSection = (value: string): value is HomeSection =>
-  value === "about" || value === "mission";
 
 const brandFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -48,125 +39,9 @@ const brandFont = Cormorant_Garamond({
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<HomeSection | "">("");
   const [hoveredHref, setHoveredHref] = useState<string | null>(null);
-  const pendingActiveSectionRef = useRef<HomeSection | "" | null>(null);
-  const activeSectionTimerRef = useRef<number | null>(null);
   const pathname = usePathname();
   const { openModal } = useDonationModal();
-
-  const clearActiveSectionTimer = () => {
-    if (activeSectionTimerRef.current !== null) {
-      window.clearTimeout(activeSectionTimerRef.current);
-      activeSectionTimerRef.current = null;
-    }
-
-    pendingActiveSectionRef.current = null;
-  };
-
-  const setActiveSectionImmediate = (section: HomeSection | "") => {
-    clearActiveSectionTimer();
-    setActiveSection(section);
-  };
-
-  const queueActiveSectionFromScroll = (section: HomeSection | "") => {
-    pendingActiveSectionRef.current = section;
-
-    if (activeSectionTimerRef.current !== null) {
-      return;
-    }
-
-    activeSectionTimerRef.current = window.setTimeout(() => {
-      activeSectionTimerRef.current = null;
-      const nextSection = pendingActiveSectionRef.current;
-      pendingActiveSectionRef.current = null;
-
-      if (nextSection !== null) {
-        setActiveSection((currentSection) =>
-          currentSection === nextSection ? currentSection : nextSection
-        );
-      }
-    }, SCROLL_ACTIVE_SYNC_DELAY_MS);
-  };
-
-  const scrollToHomeSection = (section: HomeSection, behavior: ScrollBehavior) => {
-    const sectionEl = document.getElementById(section);
-
-    if (!sectionEl) {
-      return false;
-    }
-
-    const sectionTop = sectionEl.getBoundingClientRect().top + window.scrollY;
-
-    window.scrollTo({
-      top: Math.max(0, sectionTop - NAV_SCROLL_OFFSET),
-      behavior,
-    });
-
-    return true;
-  };
-
-  const getActiveSectionFromScroll = (): HomeSection | "" => {
-    const aboutSection = document.getElementById("about");
-    const missionSection = document.getElementById("mission");
-
-    if (!aboutSection || !missionSection) {
-      return "";
-    }
-
-    const probeY = window.scrollY + NAV_SCROLL_OFFSET + SECTION_PROBE_OFFSET;
-    const aboutTop = aboutSection.offsetTop;
-    const aboutBottom = aboutTop + aboutSection.offsetHeight;
-    const missionTop = missionSection.offsetTop;
-    const missionBottom = missionTop + missionSection.offsetHeight;
-
-    if (probeY >= aboutTop && probeY < missionTop && probeY < aboutBottom) {
-      return "about";
-    }
-
-    if (probeY >= missionTop && probeY < missionBottom) {
-      return "mission";
-    }
-
-    return "";
-  };
-
-  const handleNavLinkClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
-    setIsMobileOpen(false);
-
-    if (href.startsWith("/#")) {
-      const section = href.slice(2);
-
-      if (!isHomeSection(section)) {
-        return;
-      }
-
-      // Pre-set active section so cross-page hash navigation doesn't flicker through Home.
-      setActiveSectionImmediate(section);
-
-      if (pathname !== "/") {
-        return;
-      }
-
-      event.preventDefault();
-
-      if (scrollToHomeSection(section, "smooth")) {
-        window.history.replaceState(null, "", `/#${section}`);
-      }
-      return;
-    }
-
-    if (pathname !== "/") {
-      return;
-    }
-
-    if (href === "/") {
-      event.preventDefault();
-      setActiveSectionImmediate("");
-      window.history.replaceState(null, "", "/");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
 
   useEffect(() => {
     setHoveredHref(null);
@@ -179,89 +54,9 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (pathname !== "/") {
-      setActiveSectionImmediate("");
-      return;
-    }
-
-    let frameId: number | null = null;
-    let hashSyncTimer: number | null = null;
-    const syncActiveSection = (immediate = false) => {
-      const section = getActiveSectionFromScroll();
-
-      if (immediate) {
-        setActiveSectionImmediate(section);
-        return;
-      }
-
-      queueActiveSectionFromScroll(section);
-    };
-
-    const handleScroll = () => {
-      if (frameId !== null) {
-        return;
-      }
-
-      frameId = window.requestAnimationFrame(() => {
-        syncActiveSection();
-        frameId = null;
-      });
-    };
-
-    const handleResize = () => syncActiveSection(true);
-
-    const hash = window.location.hash.replace("#", "");
-    const hashSection = isHomeSection(hash) ? hash : "";
-
-    if (hashSection) {
-      setActiveSectionImmediate(hashSection);
-    } else {
-      syncActiveSection(true);
-    }
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleResize);
-
-    if (hashSection) {
-      const alignToHash = (attempt = 0) => {
-        const didScroll = scrollToHomeSection(hashSection, attempt === 0 ? "auto" : "smooth");
-
-        if (didScroll) {
-          setActiveSectionImmediate(hashSection);
-          return;
-        }
-
-        if (attempt < 8) {
-          hashSyncTimer = window.setTimeout(() => alignToHash(attempt + 1), 120);
-        }
-      };
-
-      alignToHash();
-    }
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
-      clearActiveSectionTimer();
-
-      if (frameId !== null) {
-        window.cancelAnimationFrame(frameId);
-      }
-
-      if (hashSyncTimer !== null) {
-        window.clearTimeout(hashSyncTimer);
-      }
-    };
-  }, [pathname]);
-
   const isActiveLink = (href: string) => {
     if (href === "/") {
-      return pathname === "/" && activeSection === "";
-    }
-
-    if (href.startsWith("/#")) {
-      return pathname === "/" && activeSection === href.slice(2);
+      return pathname === "/";
     }
 
     return pathname === href || pathname.startsWith(`${href}/`);
@@ -335,7 +130,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={(event) => handleNavLinkClick(event, link.href)}
+                onClick={() => setIsMobileOpen(false)}
                 onMouseEnter={() => setHoveredHref(link.href)}
                 className={cn(
                   "relative z-0 px-2 py-1 text-sm font-medium transition-all duration-500 ease-out",
@@ -407,7 +202,7 @@ export default function Navbar() {
                       ? "text-white"
                       : "text-sage-800 hover:bg-sage-50 hover:text-sage-600"
                   )}
-                  onClick={(event) => handleNavLinkClick(event, link.href)}
+                  onClick={() => setIsMobileOpen(false)}
                   onMouseEnter={() => setHoveredHref(link.href)}
                   onMouseLeave={() => setHoveredHref((current) => (current === link.href ? null : current))}
                 >

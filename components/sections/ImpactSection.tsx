@@ -2,13 +2,20 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import type { ImpactItem } from "@/types";
 import { cn } from "@/lib/utils";
 import { Manrope } from "next/font/google";
-import { Snowflake } from "lucide-react";
+import { Snowflake, Stethoscope } from "lucide-react";
 import {
   HiOutlineAcademicCap,
+  HiOutlineBeaker,
+  HiOutlineBuildingLibrary,
+  HiOutlineBuildingOffice,
+  HiOutlineExclamationTriangle,
   HiOutlineGlobeAlt,
+  HiOutlineHandRaised,
   HiOutlineHeart,
   HiOutlineHome,
+  HiOutlineLightBulb,
   HiOutlinePlusCircle,
+  HiOutlineShieldCheck,
   HiOutlineSparkles,
   HiOutlineSun,
   HiOutlineUser,
@@ -31,6 +38,14 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
   woman: HiOutlineUser,
   community: HiOutlineUserGroup,
   firstAid: HiOutlinePlusCircle,
+  medicalEmergency: HiOutlineExclamationTriangle,
+  stethoscope: Stethoscope,
+  officeBuilding: HiOutlineBuildingOffice,
+  hand: HiOutlineHandRaised,
+  library: HiOutlineBuildingLibrary,
+  beaker: HiOutlineBeaker,
+  lightBulb: HiOutlineLightBulb,
+  shieldCheck: HiOutlineShieldCheck,
   graduation: HiOutlineAcademicCap,
   snowflake: Snowflake,
   global: HiOutlineGlobeAlt,
@@ -41,59 +56,6 @@ const achievementFont = Manrope({
   weight: ["500", "600", "700", "800"],
   display: "swap",
 });
-
-const defaultItems: ImpactItem[] = [
-  {
-    _id: "d1",
-    icon: "hands",
-    heading: "Construction of homes for families without proper shelter",
-    description: "",
-    order: 1,
-  },
-  {
-    _id: "d2",
-    icon: "community",
-    heading: "Distribution of iftar meals during Ramadan to underprivileged communities",
-    description: "",
-    order: 2,
-  },
-  {
-    _id: "d3",
-    icon: "global",
-    heading: "Flood relief support for disaster-affected families",
-    description: "",
-    order: 3,
-  },
-  {
-    _id: "d6",
-    icon: "firstAid",
-    heading: "Providing medical assistance & medicines for those in need",
-    description: "",
-    order: 6,
-  },
-  {
-    _id: "d5",
-    icon: "graduation",
-    heading: "Support for children’s education",
-    description: "",
-    order: 5,
-  },
-  {
-    _id: "d4",
-    icon: "snowflake",
-    heading: "Winter clothing distribution for vulnerable populations",
-    description: "",
-    order: 4,
-  },
-  {
-    _id: "d7",
-    icon: "woman",
-    heading:
-      "Women's hygiene support initiatives, including large-scale distribution of sanitary napkins during flood emergencies",
-    description: "",
-    order: 7,
-  },
-];
 
 const bentoPlacementClasses = [
   "lg:col-start-1 lg:col-span-2 lg:row-start-1 lg:row-span-2",
@@ -110,10 +72,11 @@ const cardDirections = ["up", "left", "right", "up", "left", "right", "up"] as c
 const getCardText = (item: ImpactItem) => item.heading || item.description || "";
 
 export default function ImpactSection({ items }: ImpactSectionProps) {
-  const sourceItems = (items?.length ? items : defaultItems)
-    .slice()
-    .sort((a, b) => a.order - b.order)
-    .slice(0, 7);
+  const sourceItems = items.slice().sort((a, b) => a.order - b.order).slice(0, 7);
+
+  if (sourceItems.length === 0) {
+    return null;
+  }
 
   // Put longer copy into larger bento slots for a balanced visual rhythm.
   const displayItems = sourceItems
