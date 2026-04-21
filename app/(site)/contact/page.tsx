@@ -151,10 +151,10 @@ export default function ContactPage() {
                       className="text-sage-500 mt-0.5 shrink-0"
                     />
                     <a
-                      href="mailto:info@farzanaarozfoundation.org"
+                      href="mailto:farhanaafrozfoundation@gmail.com"
                       className="hover:text-sage-600 transition-colors"
                     >
-                      info@farzanaarozfoundation.org
+                      farhanaafrozfoundation@gmail.com
                     </a>
                   </li>
                 
