@@ -1,7 +1,6 @@
-import TeamCard from "@/components/ui/TeamCard";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import { SkeletonCard } from "@/components/ui/SkeletonCard";
-import { getTeamMembers } from "@/sanity/lib/queries";
+import TeamAdvisorToggle from "@/components/ui/TeamAdvisorToggle";
+import { getTeamMembers, getAdvisors } from "@/sanity/lib/queries";
 import { simulateDelay } from "@/lib/utils";
 
 export const revalidate = 3600;
@@ -14,7 +13,7 @@ export const metadata = {
 
 export default async function TeamPage() {
   await simulateDelay();
-  const members = await getTeamMembers();
+  const [members, advisors] = await Promise.all([getTeamMembers(), getAdvisors()]);
 
   return (
     <>
@@ -36,24 +35,10 @@ export default async function TeamPage() {
         </div>
       </section>
 
-      {/* Team Grid */}
+      {/* Team / Advisors Grid */}
       <section className="py-[60px] bg-white">
         <div className="max-w-6xl mx-auto px-5">
-          {members.length === 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-              {[1, 2, 3, 4].map((i) => (
-                <SkeletonCard key={i} aspect="square" />
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-              {members.map((member, i) => (
-                <ScrollReveal key={member._id} delay={i * 0.07}>
-                  <TeamCard member={member} />
-                </ScrollReveal>
-              ))}
-            </div>
-          )}
+          <TeamAdvisorToggle members={members} advisors={advisors} />
         </div>
       </section>
     </>

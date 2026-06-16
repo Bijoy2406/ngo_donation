@@ -14,6 +14,13 @@ export const teamMember = defineType({
       options: { hotspot: true },
     }),
     defineField({
+      name: "isAdvisor",
+      title: "Advisor",
+      type: "boolean",
+      description: "Turn on to list this person as an Advisor instead of a Team Member.",
+      initialValue: false,
+    }),
+    defineField({
       name: "order",
       title: "Display Order",
       type: "number",
@@ -21,6 +28,13 @@ export const teamMember = defineType({
     }),
   ],
   preview: {
-    select: { title: "name", subtitle: "role", media: "image" },
+    select: { title: "name", subtitle: "role", media: "image", isAdvisor: "isAdvisor" },
+    prepare({ title, subtitle, media, isAdvisor }) {
+      return {
+        title,
+        subtitle: `${isAdvisor ? "Advisor" : "Team"} · ${subtitle ?? ""}`,
+        media,
+      };
+    },
   },
 });

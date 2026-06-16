@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { urlFor, getBlurUrl } from "@/sanity/lib/image";
@@ -25,10 +25,9 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
       : (placeholderItems as unknown as CarouselItem[]);
 
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const touchStart = useRef<number | null>(null);
+  const touchEnd = useRef<number | null>(null);
 
-  // Minimum swipe distance (in pixels) to trigger a slide change
   const minSwipeDistance = 50;
 
   const nextEvent = useCallback(() => {
@@ -42,13 +41,13 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
   }, [displayItems.length]);
 
   useEffect(() => {
-    if (touchStart !== null) return;
+    if (touchStart.current !== null) return;
     if (displayItems.length < 2) return;
     const id = setInterval(() => {
       nextEvent();
-    }, 5500); // Autoplay 5.5s
+    }, 5500);
     return () => clearInterval(id);
-  }, [displayItems.length, nextEvent, touchStart]);
+  }, [displayItems.length, nextEvent]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -60,19 +59,18 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
     return () => window.removeEventListener("keydown", handler);
   }, [displayItems.length, nextEvent, prevEvent]);
 
-  // Touch handlers for swipe support
   const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
+    touchEnd.current = null;
+    touchStart.current = e.targetTouches[0].clientX;
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    touchEnd.current = e.targetTouches[0].clientX;
   };
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
+    if (!touchStart.current || !touchEnd.current) return;
+    const distance = touchStart.current - touchEnd.current;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
 
@@ -82,15 +80,14 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
     if (isRightSwipe) {
       prevEvent();
     }
-    
-    // Reset touch variables
-    setTouchStart(null);
-    setTouchEnd(null);
+
+    touchStart.current = null;
+    touchEnd.current = null;
   };
 
   return (
     <section className="py-[80px] bg-sage-50 relative overflow-hidden">
-      {/* Decorative Orbs (adapted from original code) */}
+      {/* Decorative Orbs */}
       <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#c5d8c8]/40 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute bottom-0 -left-20 h-80 w-80 rounded-full bg-[#9abfa0]/30 blur-3xl" aria-hidden="true" />
 
@@ -111,16 +108,14 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
 
         {/* Spotlight Carousel Wrapper */}
         <ScrollReveal>
-          <div
+          <section
             className="relative w-full aspect-[4/3] md:aspect-[21/9] rounded-[24px] overflow-hidden shadow-2xl bg-sage-200"
-            role="region"
             aria-label="Journey Image Carousel"
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
             {displayItems.map((item, i) => {
-              // Virtualize: only render current, previous, and next slides
               const len = displayItems.length;
               const prev = (currentIdx - 1 + len) % len;
               const next = (currentIdx + 1) % len;
@@ -142,7 +137,6 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
                   }`}
                   aria-hidden={!active}
                 >
-                  {/* Background Image */}
                   {hasImage ? (
                     <Image
                       src={imageUrl}
@@ -159,13 +153,11 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
                       1600 x 800
                     </div>
                   )}
-                  
-                  {/* Dark Gradient Overlay for text readability */}
+
                   <div className={`absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/95 via-black/50 to-transparent transition-opacity duration-500 ${
                     active ? "opacity-100" : "opacity-0"
                   }`} />
 
-                  {/* Text Details Overlay */}
                   <div
                     className={`absolute inset-x-0 bottom-0 z-20 pointer-events-none p-6 md:p-12 flex flex-col justify-end transform transition-all duration-500 ease-out ${
                       active ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
@@ -186,8 +178,9 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
               );
             })}
 
-            {/* Arrow Controls (Sides) */}
+            {/* Arrow Controls */}
             <button
+              type="button"
               aria-label="Previous slide"
               onClick={(e) => {
                 e.preventDefault();
@@ -200,6 +193,7 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
             </button>
 
             <button
+              type="button"
               aria-label="Next slide"
               onClick={(e) => {
                 e.preventDefault();
@@ -210,14 +204,15 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
             >
               <HiChevronRight size={24} />
             </button>
-          </div>
+          </section>
         </ScrollReveal>
 
         {/* Dot Indicators */}
         <div className="flex justify-center gap-2.5 mt-8">
-          {displayItems.map((_, i) => (
+          {displayItems.map((item, i) => (
             <button
-              key={i}
+              key={item._id}
+              type="button"
               onClick={() => setCurrentIdx(i)}
               aria-label={`Go to slide ${i + 1}`}
               className={`h-2 rounded-full transition-all duration-300 ${

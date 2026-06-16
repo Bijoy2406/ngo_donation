@@ -20,13 +20,6 @@ if (!projectId || !dataset) {
   );
 }
 
-export const client = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: isProduction,
-});
-
 // Server-side read client for GROQ queries.
 // Prefer token-based reads when a valid API token is present (private datasets).
 // Fall back to unauthenticated reads for public datasets.
@@ -36,13 +29,4 @@ export const serverClient = createClient({
   apiVersion,
   token: hasServerApiToken ? sanityApiToken : undefined,
   useCdn: isProduction && !hasServerApiToken,
-});
-
-// Authenticated server client for privileged operations (mutations, private datasets, etc.).
-export const serverAuthClient = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  token: hasServerApiToken ? sanityApiToken : undefined,
-  useCdn: false,
 });

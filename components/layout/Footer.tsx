@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FiInstagram, FiFacebook, FiTwitter, FiMail, FiPhone, FiMapPin } from "react-icons/fi";
+import { FiInstagram, FiFacebook, FiTwitter, FiMail, FiPhone, FiMapPin, FiUsers } from "react-icons/fi";
 import type { SiteSettings } from "@/types";
 
 interface FooterProps {
@@ -125,13 +125,49 @@ export default function Footer({ settings }: FooterProps) {
         </div>
       </div>
 
+      {/* Volunteer CTA */}
+      {settings?.volunteerFormUrl && (
+        <div className="border-t border-sage-800">
+          <div className="max-w-6xl mx-auto px-5 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3 text-center sm:text-left">
+              <span className="hidden sm:flex items-center justify-center w-9 h-9 rounded-full bg-sage-800 text-sage-300 shrink-0">
+                <FiUsers size={17} />
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  Join Us as a Volunteer
+                </p>
+                <p className="text-xs text-sage-400 mt-0.5">
+                  Help us make a difference — contribute your time and skills.
+                </p>
+              </div>
+            </div>
+            <a
+              href={settings.volunteerFormUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center gap-2 bg-sage-500 hover:bg-sage-400 text-white text-sm font-semibold px-5 py-2.5 rounded-[8px] transition-colors whitespace-nowrap min-h-[44px] shrink-0 cursor-pointer"
+            >
+              <FiUsers size={14} />
+              Join Now
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* Bottom Bar */}
       <div className="border-t border-sage-800">
         <div className="max-w-6xl mx-auto px-5 py-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-sage-500">
           <p>&copy; {year} Farhana Afroz Foundation. All rights reserved.</p>
-          <p>
-            Built with dedication for a better community.
-          </p>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/legal-policy"
+              className="hover:text-sage-300 transition-colors"
+            >
+              Legal &amp; Policy
+            </Link>
+            <p>Built with dedication for a better community.</p>
+          </div>
         </div>
       </div>
     </footer>

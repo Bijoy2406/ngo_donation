@@ -126,11 +126,12 @@ export default async function AboutPage() {
               <div className="relative rounded-[20px] overflow-hidden shadow-xl border-4 border-white">
                 <div className="aspect-[3/4] relative">
                   <Image
-            src="/assets/CEO (2).jpg"
+                    src="/assets/CEO (2).jpg"
                     alt="Farhana Afroz - Founder & Chairman"
                     fill
                     className="object-cover object-center"
                     priority
+                    sizes="(max-width: 1024px) 100vw, 42vw"
                   />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-sage-900 via-sage-900/80 to-transparent p-6">

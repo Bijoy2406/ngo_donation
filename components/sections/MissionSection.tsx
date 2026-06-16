@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import RichTextContent, { hasRichTextContent } from "@/components/ui/RichTextContent";
+import RichTextContent from "@/components/ui/RichTextContent";
+import { hasRichTextContent } from "@/lib/richTextUtils";
 import type { MissionSection } from "@/types";
 
 interface MissionSectionProps {

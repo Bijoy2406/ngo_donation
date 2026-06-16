@@ -90,6 +90,12 @@ export const siteSettings = defineType({
       title: "Twitter/X URL",
       type: "url",
     }),
+    defineField({
+      name: "volunteerFormUrl",
+      title: "Volunteer Google Form URL",
+      type: "url",
+      description: "Google Form link for volunteer sign-ups",
+    }),
   ],
   preview: {
     prepare: () => ({ title: "Site Settings" }),

@@ -26,26 +26,25 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          // Note: X-Frame-Options is removed here to allow Sanity's embedded 
-          // features (like previews) to function correctly on your domain.
         ],
       },
       {
         source: "/_next/static/:path*",
         headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
       {
         source: "/_next/image/:path*",
         headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
-          },
+          { key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/api/payment/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "https://sandbox.sslcommerz.com" },
+          { key: "Access-Control-Allow-Methods", value: "POST, OPTIONS" },
         ],
       },
     ];

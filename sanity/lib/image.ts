@@ -1,8 +1,18 @@
 import imageUrlBuilder from "@sanity/image-url";
-import { client } from "./client";
 import type { CMSImage } from "@/types";
 
-const builder = imageUrlBuilder(client);
+const normalizeEnv = (value?: string) => value?.trim().replace(/^['"]|['"]$/g, "");
+
+const projectId =
+  normalizeEnv(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) ??
+  normalizeEnv(process.env.SANITY_STUDIO_PROJECT_ID) ??
+  "";
+const dataset =
+  normalizeEnv(process.env.NEXT_PUBLIC_SANITY_DATASET) ??
+  normalizeEnv(process.env.SANITY_STUDIO_DATASET) ??
+  "production";
+
+const builder = imageUrlBuilder({ projectId, dataset });
 
 // ---------------------------------------------------------------------------
 // Unified image builder interface — both Cloudinary and Sanity return this

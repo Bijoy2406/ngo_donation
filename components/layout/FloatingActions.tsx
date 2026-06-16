@@ -23,6 +23,7 @@ export default function FloatingActions({ whatsapp }: FloatingActionsProps) {
 
       {/* Donate Now */}
       <button
+        type="button"
         onClick={openModal}
         aria-label="Donate Now"
         className={cn(

@@ -1,6 +1,6 @@
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import EventsClientUI from "@/components/events/EventsClientUI";
-import { getAllEvents } from "@/sanity/lib/queries";
+import { getAllEvents, getOngoingEvents } from "@/sanity/lib/queries";
 import { simulateDelay } from "@/lib/utils";
 
 export const revalidate = 3600;
@@ -13,7 +13,7 @@ export const metadata = {
 
 export default async function EventsPage() {
   await simulateDelay();
-  const events = await getAllEvents();
+  const [events, ongoingEvents] = await Promise.all([getAllEvents(), getOngoingEvents()]);
 
   return (
     <>
@@ -31,7 +31,7 @@ export default async function EventsPage() {
             </ScrollReveal>
             <ScrollReveal delay={0.1} className="max-w-xs">
               <p className="text-sm text-gray-500 leading-relaxed text-right">
-                Explore our past and upcoming events, organized by event name
+                Explore our past and ongoing events, organized by event name
                 so visitors can quickly find what they are looking for.
               </p>
             </ScrollReveal>
@@ -41,7 +41,7 @@ export default async function EventsPage() {
 
       {/* Events listing */}
       <section className="pt-8">
-        <EventsClientUI events={events} />
+        <EventsClientUI events={events} ongoingEvents={ongoingEvents} />
       </section>
     </>
   );
