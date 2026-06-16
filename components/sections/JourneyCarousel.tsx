@@ -154,26 +154,24 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
                     </div>
                   )}
 
-                  <div className={`absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/95 via-black/50 to-transparent transition-opacity duration-500 ${
+                  <div className={`absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/95 via-black/50 to-transparent transition-opacity duration-300 ${
                     active ? "opacity-100" : "opacity-0"
                   }`} />
 
-                  <div
-                    className={`absolute inset-x-0 bottom-0 z-20 pointer-events-none p-6 md:p-12 flex flex-col justify-end transform transition-all duration-500 ease-out ${
-                      active ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-                    }`}
-                  >
-                    <div className="max-w-2xl">
-                      <h3 className="text-3xl md:text-5xl font-bold text-white mb-3 tracking-tight drop-shadow-lg [text-shadow:_0_4px_16px_rgba(0,0,0,0.9)]">
-                        {item.heading}
-                      </h3>
-                      {item.subheading && (
-                        <p className="text-white text-lg md:text-xl font-semibold leading-relaxed drop-shadow-md [text-shadow:_0_2px_12px_rgba(0,0,0,0.9)]">
-                          {item.subheading}
-                        </p>
-                      )}
+                  {active && (
+                    <div className="absolute inset-x-0 bottom-0 z-20 pointer-events-none p-6 md:p-12 flex flex-col justify-end">
+                      <div className="max-w-2xl">
+                        <h3 className="text-3xl md:text-5xl font-bold text-white mb-3 tracking-tight [text-shadow:_0_2px_12px_rgba(0,0,0,0.85)]">
+                          {item.heading}
+                        </h3>
+                        {item.subheading && (
+                          <p className="text-white text-lg md:text-xl font-semibold leading-relaxed [text-shadow:_0_1px_8px_rgba(0,0,0,0.8)]">
+                            {item.subheading}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}

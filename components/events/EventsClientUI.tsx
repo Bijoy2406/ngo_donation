@@ -11,10 +11,11 @@ const EVENTS_PER_PAGE = 6;
 interface EventsClientUIProps {
   events: Event[];
   ongoingEvents: Event[];
+  defaultTab?: "past" | "ongoing";
 }
 
-export default function EventsClientUI({ events, ongoingEvents }: EventsClientUIProps) {
-  const [tab, setTab] = useState<"past" | "ongoing">("past");
+export default function EventsClientUI({ events, ongoingEvents, defaultTab = "ongoing" }: EventsClientUIProps) {
+  const [tab, setTab] = useState<"past" | "ongoing">(defaultTab);
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(EVENTS_PER_PAGE);
 
@@ -47,17 +48,6 @@ export default function EventsClientUI({ events, ongoingEvents }: EventsClientUI
         <div className="inline-flex bg-sage-100 rounded-full p-1 gap-1">
           <button
             type="button"
-            onClick={() => handleTabChange("past")}
-            className={`px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
-              tab === "past"
-                ? "bg-sage-600 text-white shadow-sm"
-                : "text-sage-600 hover:text-sage-800"
-            }`}
-          >
-            Events
-          </button>
-          <button
-            type="button"
             onClick={() => handleTabChange("ongoing")}
             className={`relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
               tab === "ongoing"
@@ -77,6 +67,17 @@ export default function EventsClientUI({ events, ongoingEvents }: EventsClientUI
                 {ongoingEvents.length}
               </span>
             )}
+          </button>
+          <button
+            type="button"
+            onClick={() => handleTabChange("past")}
+            className={`px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
+              tab === "past"
+                ? "bg-sage-600 text-white shadow-sm"
+                : "text-sage-600 hover:text-sage-800"
+            }`}
+          >
+            Events
           </button>
         </div>
       </div>

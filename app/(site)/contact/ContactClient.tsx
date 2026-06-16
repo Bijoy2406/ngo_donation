@@ -172,9 +172,9 @@ export default function ContactClient({ volunteerFormUrl }: ContactClientProps) 
                 </ul>
               </div>
 
-              {/* Volunteer Promo Box */}
+              {/* Volunteer Promo Box — desktop only (md+) */}
               {volunteerFormUrl && (
-                <div className="mt-8 rounded-[12px] border border-sage-200 bg-sage-50 p-5 sm:p-6">
+                <div className="hidden md:block mt-8 rounded-[12px] border border-sage-200 bg-sage-50 p-5 sm:p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="flex items-center justify-center w-9 h-9 rounded-full bg-sage-100 text-sage-600 shrink-0">
                       <FiUsers size={17} />
@@ -311,6 +311,33 @@ export default function ContactClient({ volunteerFormUrl }: ContactClientProps) 
                   </p>
                 )}
               </form>
+
+              {/* Volunteer Promo Box — mobile/tablet only (below md) */}
+              {volunteerFormUrl && (
+                <div className="md:hidden mt-8 rounded-[12px] border border-sage-200 bg-sage-50 p-5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="flex items-center justify-center w-9 h-9 rounded-full bg-sage-100 text-sage-600 shrink-0">
+                      <FiUsers size={17} />
+                    </span>
+                    <h2 className="text-sm font-bold text-sage-900 leading-snug">
+                      Join Us as a Volunteer
+                    </h2>
+                  </div>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                    Make a difference in your community. We welcome passionate
+                    individuals ready to contribute their time and skills.
+                  </p>
+                  <a
+                    href={volunteerFormUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex items-center gap-2 bg-sage-500 hover:bg-sage-600 text-white text-sm font-semibold px-5 py-2.5 rounded-[8px] transition-colors min-h-[44px] cursor-pointer"
+                  >
+                    <FiUsers size={14} />
+                    Join Now
+                  </a>
+                </div>
+              )}
             </ScrollReveal>
           </div>
         </div>
