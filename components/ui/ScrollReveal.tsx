@@ -1,7 +1,7 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { ReactNode, useSyncExternalStore } from "react";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
 interface ScrollRevealProps {
@@ -11,18 +11,16 @@ interface ScrollRevealProps {
   direction?: "up" | "left" | "right";
 }
 
+const subscribe = () => () => {};
+
 export default function ScrollReveal({
   children,
   className,
   delay = 0,
   direction = "up",
 }: ScrollRevealProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const initial = {
     opacity: 0,
@@ -36,14 +34,16 @@ export default function ScrollReveal({
   }
 
   return (
-    <motion.div
-      ref={ref}
-      initial={initial}
-      animate={inView ? { opacity: 1, y: 0, x: 0 } : initial}
-      transition={{ duration: 0.55, delay, ease: "easeOut" }}
-      className={className}
-    >
-      {children}
-    </motion.div>
+    <LazyMotion features={domAnimation}>
+      <m.div
+        ref={ref}
+        initial={initial}
+        animate={inView ? { opacity: 1, y: 0, x: 0 } : initial}
+        transition={{ duration: 0.55, delay, ease: "easeOut" }}
+        className={className}
+      >
+        {children}
+      </m.div>
+    </LazyMotion>
   );
 }

@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import RichTextContent, {
-  hasRichTextContent,
-} from "@/components/ui/RichTextContent";
+import RichTextContent from "@/components/ui/RichTextContent";
+import { hasRichTextContent } from "@/lib/richTextUtils";
 import { getMission } from "@/sanity/lib/queries";
 import { getBlurUrl, urlFor } from "@/sanity/lib/image";
 

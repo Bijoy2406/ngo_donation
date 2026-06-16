@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion";
 import { HiPlus, HiMinus } from "react-icons/hi";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import type { FAQItem } from "@/types";
@@ -47,6 +47,7 @@ function FAQAccordionItem({ item }: { item: FAQItem }) {
   return (
     <div className="border-b border-sage-100 last:border-0">
       <button
+        type="button"
         className="w-full flex items-center justify-between py-5 text-left gap-4 group"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
@@ -59,21 +60,23 @@ function FAQAccordionItem({ item }: { item: FAQItem }) {
         </span>
       </button>
 
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            <p className="pb-5 text-sm text-gray-500 leading-relaxed pr-10">
-              {item.answer}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <LazyMotion features={domAnimation}>
+        <AnimatePresence initial={false}>
+          {isOpen && (
+            <m.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <p className="pb-5 text-sm text-gray-500 leading-relaxed pr-10">
+                {item.answer}
+              </p>
+            </m.div>
+          )}
+        </AnimatePresence>
+      </LazyMotion>
     </div>
   );
 }

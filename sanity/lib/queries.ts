@@ -42,7 +42,8 @@ export const getSiteSettings = cache(
         nagadNumber,
         email,
         phone,
-        address
+        address,
+        volunteerFormUrl
       }`);
     },
     ["site-settings"],
@@ -50,37 +51,40 @@ export const getSiteSettings = cache(
   )
 );
 
-export const getFeaturedEvents = cache(
-  unstable_cache(
-    async (): Promise<Event[]> => {
-      return serverClient.fetch(`*[_type == "event" && featured == true] | order(featuredOrder asc)[0...4]{
-        _id,
-        title,
-        slug,
-        shortDescription,
-        thumbnail,
-        date
-      }`);
-    },
-    ["featured-events"],
-    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["events"] }
-  )
-);
-
 export const getAllEvents = cache(
   unstable_cache(
     async (): Promise<Event[]> => {
-      return serverClient.fetch(`*[_type == "event"] | order(date desc){
+      return serverClient.fetch(`*[_type == "event" && isOngoing != true] | order(date desc){
         _id,
         title,
         slug,
         shortDescription,
         thumbnail,
         date,
-        featured
+        featured,
+        isOngoing
       }`);
     },
     ["all-events"],
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["events"] }
+  )
+);
+
+export const getOngoingEvents = cache(
+  unstable_cache(
+    async (): Promise<Event[]> => {
+      return serverClient.fetch(`*[_type == "event" && isOngoing == true] | order(date desc){
+        _id,
+        title,
+        slug,
+        shortDescription,
+        thumbnail,
+        date,
+        featured,
+        isOngoing
+      }`);
+    },
+    ["ongoing-events"],
     { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["events"] }
   )
 );
@@ -111,12 +115,13 @@ export const getEventBySlug = cache(async (slug: string): Promise<Event | null> 
 export const getTeamMembers = cache(
   unstable_cache(
     async (): Promise<TeamMember[]> => {
-      return serverClient.fetch(`*[_type == "teamMember"] | order(order asc){
+      return serverClient.fetch(`*[_type == "teamMember" && isAdvisor != true] | order(order asc){
         _id,
         name,
         role,
         image,
-        order
+        order,
+        isAdvisor
       }`);
     },
     ["team-members"],
@@ -124,19 +129,20 @@ export const getTeamMembers = cache(
   )
 );
 
-export const getCarouselItems = cache(
+export const getAdvisors = cache(
   unstable_cache(
-    async (): Promise<CarouselItem[]> => {
-      return serverClient.fetch(`*[_type == "carouselItem"] | order(order asc){
+    async (): Promise<TeamMember[]> => {
+      return serverClient.fetch(`*[_type == "teamMember" && isAdvisor == true] | order(order asc){
         _id,
-        heading,
-        subheading,
+        name,
+        role,
         image,
-        order
+        order,
+        isAdvisor
       }`);
     },
-    ["carousel-items"],
-    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["carousel"] }
+    ["advisors"],
+    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["team"] }
   )
 );
 
@@ -152,37 +158,6 @@ export const getMission = cache(
     },
     ["mission"],
     { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["mission"] }
-  )
-);
-
-export const getImpactItems = cache(
-  unstable_cache(
-    async (): Promise<ImpactItem[]> => {
-      return serverClient.fetch(`*[_type in ["keyAchievementItem", "impactItem"]] | order(order asc){
-        _id,
-        icon,
-        heading,
-        description,
-        order
-      }`);
-    },
-    ["impact-items"],
-    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["impact"] }
-  )
-);
-
-export const getFAQItems = cache(
-  unstable_cache(
-    async (): Promise<FAQItem[]> => {
-      return serverClient.fetch(`*[_type == "faqItem"] | order(order asc){
-        _id,
-        question,
-        answer,
-        order
-      }`);
-    },
-    ["faq-items"],
-    { revalidate: CACHE_REVALIDATE_SECONDS, tags: ["faq"] }
   )
 );
 
@@ -240,7 +215,8 @@ export const getHomePageData = cache(
           nagadNumber,
           email,
           phone,
-          address
+          address,
+          volunteerFormUrl
         },
         "featuredEvents": *[_type == "event" && featured == true] | order(featuredOrder asc)[0...4]{
           _id,

@@ -40,6 +40,7 @@ export interface SiteSettings {
   email?: string;
   phone?: string;
   address?: string;
+  volunteerFormUrl?: string;
 }
 
 export interface Event {
@@ -53,6 +54,7 @@ export interface Event {
   date: string;
   featured: boolean;
   featuredOrder?: number;
+  isOngoing?: boolean;
 }
 
 export interface TeamMember {
@@ -61,6 +63,7 @@ export interface TeamMember {
   role: string;
   image: CMSImage;
   order: number;
+  isAdvisor?: boolean;
 }
 
 export interface CarouselItem {

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import { formatDate } from "@/lib/utils";
-import { richTextToPlainText } from "@/components/ui/RichTextContent";
+import { richTextToPlainText } from "@/lib/richTextUtils";
 import type { Event } from "@/types";
 
 interface EventCardProps {
@@ -63,15 +63,17 @@ export default function EventCard({ event }: EventCardProps) {
             {shortDescription}
           </p>
         )}
-        <Link
-          href={`/events/${event.slug.current}`}
-          className="inline-flex items-center text-sm font-semibold text-sage-600 hover:text-sage-800 transition-colors gap-1 group/link"
-        >
-          Learn More
-          <span className="group-hover/link:translate-x-1 transition-transform">
-            &rarr;
-          </span>
-        </Link>
+        {event.slug?.current && (
+          <Link
+            href={`/events/${event.slug.current}`}
+            className="inline-flex items-center text-sm font-semibold text-sage-600 hover:text-sage-800 transition-colors gap-1 group/link"
+          >
+            Learn More
+            <span className="group-hover/link:translate-x-1 transition-transform">
+              &rarr;
+            </span>
+          </Link>
+        )}
       </div>
     </article>
   );

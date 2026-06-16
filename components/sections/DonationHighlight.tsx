@@ -34,6 +34,7 @@ export default function DonationHighlight() {
             <ScrollReveal direction="right" delay={0.1}>
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
+                  type="button"
                   onClick={openModal}
                   className="rounded-[10px] bg-white px-6 py-3 text-sm font-bold text-[#0b5e59] shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl"
                 >

@@ -50,8 +50,22 @@ export const event = defineType({
       title: "Homepage Order (1 = first)",
       type: "number",
     }),
+    defineField({
+      name: "isOngoing",
+      title: "Ongoing Event",
+      type: "boolean",
+      description: "Turn on to mark this as an ongoing/active event.",
+      initialValue: false,
+    }),
   ],
   preview: {
-    select: { title: "title", media: "thumbnail" },
+    select: { title: "title", media: "thumbnail", isOngoing: "isOngoing" },
+    prepare({ title, media, isOngoing }) {
+      return {
+        title,
+        subtitle: isOngoing ? "Ongoing" : "Past",
+        media,
+      };
+    },
   },
 });

@@ -4,10 +4,8 @@ import { urlFor, getBlurUrl } from "@/sanity/lib/image";
 import { getEventBySlug, getAllEvents } from "@/sanity/lib/queries";
 import { formatDate, simulateDelay } from "@/lib/utils";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import RichTextContent, {
-  hasRichTextContent,
-  richTextToPlainText,
-} from "@/components/ui/RichTextContent";
+import RichTextContent from "@/components/ui/RichTextContent";
+import { hasRichTextContent, richTextToPlainText } from "@/lib/richTextUtils";
 
 export const revalidate = 3600;
 
@@ -35,9 +33,8 @@ export default async function EventDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  await simulateDelay();
   const { slug } = await params;
-  const event = await getEventBySlug(slug);
+  const [, event] = await Promise.all([simulateDelay(), getEventBySlug(slug)]);
 
   if (!event) notFound();
 
@@ -111,7 +108,7 @@ export default async function EventDetailPage({
                 const galleryBlur = getBlurUrl(img);
                 return (
                   <ScrollReveal
-                    key={i}
+                    key={src}
                     delay={i * 0.04}
                     className="masonry-item"
                   >

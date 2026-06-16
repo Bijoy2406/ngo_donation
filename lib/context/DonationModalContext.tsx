@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, use, useState, useMemo, ReactNode } from "react";
 
 interface DonationModalContextType {
   isOpen: boolean;
@@ -17,19 +17,22 @@ const DonationModalContext = createContext<DonationModalContextType>({
 export function DonationModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const value = useMemo(
+    () => ({
+      isOpen,
+      openModal: () => setIsOpen(true),
+      closeModal: () => setIsOpen(false),
+    }),
+    [isOpen]
+  );
+
   return (
-    <DonationModalContext.Provider
-      value={{
-        isOpen,
-        openModal: () => setIsOpen(true),
-        closeModal: () => setIsOpen(false),
-      }}
-    >
+    <DonationModalContext.Provider value={value}>
       {children}
     </DonationModalContext.Provider>
   );
 }
 
 export function useDonationModal() {
-  return useContext(DonationModalContext);
+  return use(DonationModalContext);
 }

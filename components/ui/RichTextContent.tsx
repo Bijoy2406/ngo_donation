@@ -1,7 +1,6 @@
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@/types";
-
-export type RichTextValue = PortableTextBlock[] | string | null | undefined;
+import type { RichTextValue } from "@/lib/richTextUtils";
 
 const portableTextComponents: PortableTextComponents = {
   block: {
@@ -61,41 +60,6 @@ const portableTextComponents: PortableTextComponents = {
     underline: ({ children }) => <span className="underline">{children}</span>,
   },
 };
-
-export function hasRichTextContent(value: RichTextValue): boolean {
-  if (typeof value === "string") {
-    return value.trim().length > 0;
-  }
-
-  return Array.isArray(value) && value.length > 0;
-}
-
-export function richTextToPlainText(value: RichTextValue): string {
-  if (typeof value === "string") {
-    return value.trim();
-  }
-
-  if (!Array.isArray(value)) {
-    return "";
-  }
-
-  return value
-    .map((block) => {
-      if (block?._type !== "block" || !Array.isArray(block.children)) {
-        return "";
-      }
-
-      return block.children
-        .map((child: { _type?: string; text?: string }) =>
-          child?._type === "span" ? child.text ?? "" : ""
-        )
-        .join("");
-    })
-    .filter(Boolean)
-    .join(" ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 function normalizeRichText(value: RichTextValue): PortableTextBlock[] {
   if (Array.isArray(value)) {
