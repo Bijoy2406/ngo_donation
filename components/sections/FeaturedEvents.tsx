@@ -23,7 +23,7 @@ export default function FeaturedEvents({ events }: FeaturedEventsProps) {
               </h2>
             </div>
             <Link
-              href="/events"
+              href="/events?tab=past"
               className="inline-flex shrink-0 text-sm font-semibold text-sage-600 transition-colors hover:text-sage-800"
             >
               View All &rarr;

@@ -186,6 +186,7 @@ export const getDonationSettings = cache(
 
 interface HomePageData {
   settings: SiteSettings | null;
+  ongoingEvents: Event[];
   featuredEvents: Event[];
   carouselItems: CarouselItem[];
   mission: MissionSection | null;
@@ -217,6 +218,15 @@ export const getHomePageData = cache(
           phone,
           address,
           volunteerFormUrl
+        },
+        "ongoingEvents": *[_type == "event" && isOngoing == true] | order(date desc){
+          _id,
+          title,
+          slug,
+          shortDescription,
+          thumbnail,
+          date,
+          isOngoing
         },
         "featuredEvents": *[_type == "event" && featured == true] | order(featuredOrder asc)[0...4]{
           _id,

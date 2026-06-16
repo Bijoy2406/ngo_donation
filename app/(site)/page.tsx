@@ -1,6 +1,7 @@
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import JourneyCarousel from "@/components/sections/JourneyCarousel";
+import OngoingEvents from "@/components/sections/OngoingEvents";
 import FeaturedEvents from "@/components/sections/FeaturedEvents";
 import DonationHighlight from "@/components/sections/DonationHighlight";
 import MissionSection from "@/components/sections/MissionSection";
@@ -12,7 +13,7 @@ import { getHomePageData } from "@/sanity/lib/queries";
 export const revalidate = 0;
 
 export default async function HomePage() {
-  const { settings, featuredEvents, carouselItems, mission, impactItems, faqItems } =
+  const { settings, ongoingEvents, featuredEvents, carouselItems, mission, impactItems, faqItems } =
     await getHomePageData();
 
   return (
@@ -20,6 +21,7 @@ export default async function HomePage() {
       <HeroSection settings={settings} />
       <AboutSection settings={settings} />
       <JourneyCarousel items={carouselItems} />
+      <OngoingEvents events={ongoingEvents} />
       <FeaturedEvents events={featuredEvents} />
       <DonationHighlight />
       <MissionSection mission={mission} />

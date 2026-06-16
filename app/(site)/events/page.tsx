@@ -11,9 +11,19 @@ export const metadata = {
     "Browse all events organized by Farzana Afroz Foundation.",
 };
 
-export default async function EventsPage() {
+interface EventsPageProps {
+  searchParams: Promise<{ tab?: string }>;
+}
+
+export default async function EventsPage({ searchParams }: EventsPageProps) {
   await simulateDelay();
-  const [events, ongoingEvents] = await Promise.all([getAllEvents(), getOngoingEvents()]);
+  const [events, ongoingEvents, params] = await Promise.all([
+    getAllEvents(),
+    getOngoingEvents(),
+    searchParams,
+  ]);
+
+  const defaultTab = params.tab === "past" ? "past" : "ongoing";
 
   return (
     <>
@@ -41,7 +51,7 @@ export default async function EventsPage() {
 
       {/* Events listing */}
       <section className="pt-8">
-        <EventsClientUI events={events} ongoingEvents={ongoingEvents} />
+        <EventsClientUI events={events} ongoingEvents={ongoingEvents} defaultTab={defaultTab} />
       </section>
     </>
   );
