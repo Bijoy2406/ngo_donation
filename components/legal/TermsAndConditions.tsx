@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface TermsAndConditionsProps {
@@ -399,11 +399,13 @@ export default function TermsAndConditions({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length > 0) {
+          const top = visible.reduce((a, b) =>
+            a.boundingClientRect.top <= b.boundingClientRect.top ? a : b
+          );
+          setActiveId(top.target.id);
+        }
       },
       { rootMargin: "-15% 0px -70% 0px" }
     );
@@ -414,7 +416,8 @@ export default function TermsAndConditions({
     });
 
     return () => observer.disconnect();
-  }, [sections]);
+    // section ids are static for the lifetime of the component
+  }, []);
 
   return (
     <>
@@ -474,6 +477,7 @@ export default function TermsAndConditions({
                   <li key={s.id}>
                     <a
                       href={`#${s.id}`}
+                      aria-current={activeId === s.id ? "location" : undefined}
                       className={`block text-[13px] py-1 pl-3 border-l-2 transition-colors ${
                         activeId === s.id
                           ? "border-sage-400 text-sage-900 font-semibold"
