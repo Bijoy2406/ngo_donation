@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
+import TermsAndConditions from "@/components/legal/TermsAndConditions";
+import { getSiteSettings } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
-  title: "Legal & Policy | Farhana Afroz Foundation",
-  description: "Legal information and policies of the Farhana Afroz Foundation.",
+  title: "Terms & Conditions | Farhana Afroz Foundation",
+  description:
+    "Terms & Conditions governing use of farhanaafrozfoundation.org and participation in our donation, volunteering, and community programs.",
 };
 
-export default function LegalPolicyPage() {
+export default async function LegalPolicyPage() {
+  const settings = await getSiteSettings();
+
   return (
-    <main className="min-h-screen bg-[#faf5ec] pt-28 pb-20 px-5">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-bold text-sage-900 mb-3">
-          Legal &amp; Policy
-        </h1>
-        <p className="text-sage-600 text-base leading-relaxed">
-          This page will contain our legal information and policies. Content coming soon.
-        </p>
-      </div>
-    </main>
+    <TermsAndConditions email={settings?.email} phone={settings?.phone} />
   );
 }

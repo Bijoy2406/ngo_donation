@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms &amp; Conditions | Farhana Afroz Foundation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --surface:#FAF8F4;
+    --surface-alt:#F1EBDC;
+    --ink:#232B26;
+    --ink-soft:#5D6459;
+    --primary:#1F4B3F;
+    --primary-deep:#12281F;
+    --accent:#D89A2E;
+    --accent-soft:#F3E2B4;
+    --line:#DED5C0;
+    --font-display:'Fraunces', Georgia, serif;
+    --font-body:'Public Sans', -apple-system, sans-serif;
+    --max-w:1180px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--surface);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:var(--primary); text-decoration-color:var(--accent); text-underline-offset:3px;}
+  a:hover{color:var(--primary-deep);}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    background:linear-gradient(160deg, var(--primary) 0%, var(--primary-deep) 100%);
+    color:#F4EFE2;
+    padding:4.5rem 1.5rem 3.5rem;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    right:-80px; top:-80px;
+    width:280px; height:280px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(216,154,46,0.18) 0%, rgba(216,154,46,0) 70%);
+  }
+  .hero-inner{max-width:var(--max-w); margin:0 auto; position:relative;}
+  .eyebrow{
+    font-size:0.8rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:600;
+    margin:0 0 0.9rem;
+  }
+  .hero h1{
+    font-family:var(--font-display);
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(2.1rem, 5vw, 3.2rem);
+    margin:0 0 0.9rem;
+    letter-spacing:-0.01em;
+  }
+  .hero p.lede{
+    max-width:640px;
+    color:#E4DCC8;
+    font-size:1.02rem;
+    margin:0 0 1.6rem;
+  }
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:0.6rem 1.2rem;
+    font-size:0.88rem; color:#CFC6AC;
+  }
+  .meta-row strong{color:#F4EFE2; font-weight:600;}
+  .gold-rule{
+    width:64px; height:3px;
+    background:var(--accent);
+    border-radius:2px;
+    margin:1.4rem 0 0;
+  }
+
+  /* ---------- Layout ---------- */
+  .layout{
+    max-width:var(--max-w);
+    margin:0 auto;
+    padding:3rem 1.5rem 5rem;
+    display:grid;
+    grid-template-columns:250px 1fr;
+    gap:3.5rem;
+    align-items:start;
+  }
+
+  .toc{
+    position:sticky;
+    top:1.5rem;
+    background:var(--surface-alt);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:1.3rem 1.2rem;
+  }
+  .toc-label{
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    font-weight:600;
+    margin:0 0 0.9rem;
+  }
+  .toc ol{list-style:none; margin:0; padding:0;}
+  .toc li{margin:0 0 0.55rem;}
+  .toc a{
+    display:block;
+    font-size:0.87rem;
+    color:var(--ink);
+    text-decoration:none;
+    padding:0.15rem 0 0.15rem 0.85rem;
+    border-left:2px solid var(--line);
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .toc a:hover, .toc a.active{
+    border-left-color:var(--accent);
+    color:var(--primary);
+    font-weight:600;
+  }
+
+  /* ---------- Content ---------- */
+  .content{position:relative;}
+  .intro{
+    background:var(--surface-alt);
+    border-left:3px solid var(--accent);
+    padding:1.1rem 1.4rem;
+    border-radius:0 8px 8px 0;
+    color:var(--ink-soft);
+    font-size:0.95rem;
+    margin-bottom:2.6rem;
+  }
+
+  section.term{
+    display:grid;
+    grid-template-columns:52px 1fr;
+    gap:1.1rem;
+    padding-bottom:2.2rem;
+    margin-bottom:2.2rem;
+    border-bottom:1px solid var(--line);
+    scroll-margin-top:1.5rem;
+  }
+  section.term:last-of-type{border-bottom:none;}
+
+  .marker{
+    position:relative;
+    display:flex;
+    justify-content:center;
+  }
+  .marker::before{
+    content:"";
+    position:absolute;
+    top:38px; bottom:-2.2rem;
+    width:2px;
+    background:linear-gradient(var(--accent), var(--line));
+    opacity:0.55;
+  }
+  section.term:last-of-type .marker::before{display:none;}
+  .marker span{
+    width:38px; height:38px;
+    border-radius:50%;
+    background:var(--surface);
+    border:2px solid var(--accent);
+    color:var(--primary-deep);
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:0.92rem;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+
+  .term h2{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1.4rem;
+    margin:0.15rem 0 0.75rem;
+    color:var(--primary-deep);
+    letter-spacing:-0.01em;
+  }
+  .term p{margin:0 0 0.85rem; color:var(--ink);}
+  .term p:last-child{margin-bottom:0;}
+  .term ul{margin:0 0 0.85rem; padding-left:1.2rem;}
+  .term li{margin-bottom:0.45rem;}
+  .term strong{color:var(--primary-deep);}
+
+  .note{
+    background:var(--accent-soft);
+    border-radius:8px;
+    padding:0.85rem 1.1rem;
+    font-size:0.9rem;
+    color:#5A4318;
+    margin-top:0.9rem;
+  }
+
+  /* ---------- Footer (matches site structure) ---------- */
+  footer.site-footer{
+    background:var(--primary-deep);
+    color:#C9C2AC;
+    padding:3rem 1.5rem 2rem;
+  }
+  .footer-inner{
+    max-width:var(--max-w);
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr;
+    gap:2.5rem;
+  }
+  .footer-inner h3{
+    font-family:var(--font-display);
+    color:#F4EFE2;
+    font-size:1.1rem;
+    margin:0 0 0.7rem;
+    font-weight:600;
+  }
+  .footer-inner p{font-size:0.88rem; margin:0 0 0.4rem; line-height:1.6;}
+  .footer-inner ul{list-style:none; margin:0; padding:0;}
+  .footer-inner li{margin-bottom:0.5rem; font-size:0.88rem;}
+  .footer-inner a{color:#C9C2AC; text-decoration:none;}
+  .footer-inner a:hover{color:var(--accent);}
+  .footer-bottom{
+    max-width:var(--max-w);
+    margin:2.2rem auto 0;
+    padding-top:1.4rem;
+    border-top:1px solid rgba(255,255,255,0.1);
+    font-size:0.8rem;
+    color:#9B9481;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.6rem;
+  }
+
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr;}
+    .toc{position:relative; top:0;}
+    .footer-inner{grid-template-columns:1fr; gap:1.8rem;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Farhana Afroz Foundation</p>
+    <h1>Terms &amp; Conditions</h1>
+    <p class="lede">These Terms govern your use of farhanaafrozfoundation.org and your participation in our donation, volunteering, and community programs. Please read them before using the site.</p>
+    <div class="meta-row">
+      <span><strong>Effective date:</strong> August 4, 2026</span>
+      <span><strong>Applies to:</strong> Visitors, donors, and volunteers</span>
+      <span><strong>Organization based in:</strong> Dhaka, Bangladesh</span>
+    </div>
+    <div class="gold-rule"></div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <nav class="toc" aria-label="Table of contents">
+    <p class="toc-label">On this page</p>
+    <ol>
+      <li><a href="#acceptance">01 · Acceptance of Terms</a></li>
+      <li><a href="#about">02 · About the Foundation</a></li>
+      <li><a href="#use">03 · Eligibility &amp; Use of the Site</a></li>
+      <li><a href="#donations">04 · Donations</a></li>
+      <li><a href="#volunteering">05 · Volunteering</a></li>
+      <li><a href="#events">06 · Events &amp; Programs</a></li>
+      <li><a href="#ip">07 · Intellectual Property</a></li>
+      <li><a href="#submissions">08 · User Submissions</a></li>
+      <li><a href="#thirdparty">09 · Third-Party Links &amp; Services</a></li>
+      <li><a href="#privacy">10 · Privacy</a></li>
+      <li><a href="#disclaimers">11 · Disclaimers</a></li>
+      <li><a href="#liability">12 · Limitation of Liability</a></li>
+      <li><a href="#indemnity">13 · Indemnification</a></li>
+      <li><a href="#law">14 · Governing Law</a></li>
+      <li><a href="#changes">15 · Changes to These Terms</a></li>
+      <li><a href="#contact">16 · Contact Us</a></li>
+    </ol>
+  </nav>
+
+  <main class="content">
+    <p class="intro">By visiting this website, making a donation, registering to volunteer, or otherwise using our services, you agree to be bound by the following Terms &amp; Conditions. If you do not agree, please discontinue use of the site.</p>
+
+    <section class="term" id="acceptance">
+      <div class="marker"><span>01</span></div>
+      <div>
+        <h2>Acceptance of Terms</h2>
+        <p>These Terms &amp; Conditions ("Terms") form a binding agreement between you and Farhana Afroz Foundation ("FAF," "the Foundation," "we," "us," or "our") governing your access to and use of farhanaafrozfoundation.org (the "Site") and any related services, including online donations, volunteer registration, and event information.</p>
+        <p>By using the Site in any way, you confirm that you have read, understood, and agree to these Terms, along with any policies referenced herein. We may update these Terms from time to time, as described in Section 15.</p>
+      </div>
+    </section>
+
+    <section class="term" id="about">
+      <div class="marker"><span>02</span></div>
+      <div>
+        <h2>About the Foundation</h2>
+        <p>Farhana Afroz Foundation is a humanitarian organization established in 2009 and based in Dhaka, Bangladesh. We work to support underprivileged communities and families through rural education, housing support, women's hygiene initiatives, food and iftar distribution, disaster relief, healthcare assistance, and winter clothing distribution.</p>
+        <p>Descriptions of our programs, impact figures, and event details on this Site are provided for general informational purposes and are updated periodically; they do not constitute a guarantee of specific outcomes.</p>
+      </div>
+    </section>
+
+    <section class="term" id="use">
+      <div class="marker"><span>03</span></div>
+      <div>
+        <h2>Eligibility &amp; Use of the Site</h2>
+        <p>You may use this Site if you are legally capable of entering into a binding agreement under applicable law, or you have the consent of a parent or guardian. By using the Site, you agree not to:</p>
+        <ul>
+          <li>Use the Site for any unlawful purpose or in violation of these Terms;</li>
+          <li>Attempt to gain unauthorized access to any part of the Site or its underlying systems;</li>
+          <li>Upload or transmit viruses, malware, or any code intended to disrupt the Site;</li>
+          <li>Impersonate any person or misrepresent your affiliation with the Foundation;</li>
+          <li>Scrape, harvest, or misuse data from the Site, including donor or volunteer information.</li>
+        </ul>
+        <p>We may suspend or restrict access to the Site for anyone who violates these Terms.</p>
+      </div>
+    </section>
+
+    <section class="term" id="donations">
+      <div class="marker"><span>04</span></div>
+      <div>
+        <h2>Donations</h2>
+        <p>Donations made through the Site are voluntary contributions in support of our mission. Unless otherwise required by law, donations are non-refundable, except where a genuine processing error has occurred, in which case we will review the matter in good faith.</p>
+        <p>Donations are generally applied at the Foundation's discretion toward the programs and communities that need them most. If you wish to direct a donation toward a specific program, we will make reasonable efforts to honor that request, but it is not guaranteed unless confirmed by us in writing.</p>
+        <p>Online payments are processed through third-party payment providers. We do not store your full payment card details, and we are not responsible for outages, delays, or errors caused by these third-party services. Where reasonably practicable, we aim to issue an acknowledgment or receipt for donations received.</p>
+        <div class="note">Tax treatment of donations depends on your country of residence and applicable law. Donors should consult their own tax advisor regarding deductibility; we do not guarantee tax-exempt status of contributions.</div>
+      </div>
+    </section>
+
+    <section class="term" id="volunteering">
+      <div class="marker"><span>05</span></div>
+      <div>
+        <h2>Volunteering</h2>
+        <p>Registering as a volunteer, including through our online sign-up form, does not create an employment, agency, or partnership relationship with the Foundation. We review volunteer registrations and reserve the right to accept, decline, or set conditions for participation in specific programs or field activities.</p>
+        <p>Volunteers participating in on-the-ground activities, such as distribution drives or disaster relief, agree to follow the safety instructions of Foundation staff and coordinators at all times. Information you provide when registering is used only to coordinate volunteer activities and communicate with you.</p>
+      </div>
+    </section>
+
+    <section class="term" id="events">
+      <div class="marker"><span>06</span></div>
+      <div>
+        <h2>Events &amp; Programs</h2>
+        <p>Details about ongoing and past events, including dates, locations, and beneficiary numbers, are provided for informational purposes and are subject to change without prior notice due to the nature of humanitarian and disaster-response work.</p>
+        <p>Eligibility for aid or support under any Foundation program (such as housing, hygiene supplies, or medical assistance) is determined solely by the Foundation based on our own need-assessment criteria, and inclusion on this Site does not constitute a promise of assistance to any individual.</p>
+      </div>
+    </section>
+
+    <section class="term" id="ip">
+      <div class="marker"><span>07</span></div>
+      <div>
+        <h2>Intellectual Property</h2>
+        <p>All text, images, photographs, graphics, and the Farhana Afroz Foundation name and logo on this Site are owned by or licensed to the Foundation and are protected under the copyright and trademark laws of Bangladesh and applicable international treaties.</p>
+        <p>You may view and share Site content for personal, non-commercial purposes, including linking back to this Site. Reproduction, redistribution, or commercial use of our content without prior written permission is not permitted.</p>
+        <p>Photographs of the communities we serve are used with consent obtained at the time of the program. If you believe your image appears on this Site without appropriate consent, please contact us using the details in Section 16 so we can review the matter.</p>
+      </div>
+    </section>
+
+    <section class="term" id="submissions">
+      <div class="marker"><span>08</span></div>
+      <div>
+        <h2>User Submissions</h2>
+        <p>If you submit a message, testimonial, comment, or other content to us through the Site (for example, via a contact form), you grant the Foundation a non-exclusive, royalty-free license to use, reproduce, and publish that content for informational and promotional purposes related to our mission.</p>
+        <p>You agree not to submit content that is unlawful, defamatory, or infringes the rights of any third party.</p>
+      </div>
+    </section>
+
+    <section class="term" id="thirdparty">
+      <div class="marker"><span>09</span></div>
+      <div>
+        <h2>Third-Party Links &amp; Services</h2>
+        <p>This Site links to third-party platforms, including our Instagram and Facebook pages, our online volunteer registration form, and payment processors used for donations. These services are operated independently of the Foundation and are governed by their own terms and privacy practices.</p>
+        <p>We are not responsible for the content, security, or practices of any third-party site or service, and your use of them is at your own discretion.</p>
+      </div>
+    </section>
+
+    <section class="term" id="privacy">
+      <div class="marker"><span>10</span></div>
+      <div>
+        <h2>Privacy</h2>
+        <p>Personal information collected through donations, volunteer registration, or our contact form (such as your name, email address, or phone number) is used only to operate the Site, process donations, coordinate volunteer activities, and respond to inquiries. We do not sell personal information to third parties.</p>
+        <p>For further detail on how we collect, use, and safeguard your information, please refer to our Privacy Policy on this Legal &amp; Policy page, or contact us directly with any questions.</p>
+      </div>
+    </section>
+
+    <section class="term" id="disclaimers">
+      <div class="marker"><span>11</span></div>
+      <div>
+        <h2>Disclaimers</h2>
+        <p>This Site and its content are provided "as is" and "as available," without warranties of any kind, whether express or implied. While we strive for accuracy, we do not guarantee that the Site will be error-free, uninterrupted, or fully up to date at all times.</p>
+      </div>
+    </section>
+
+    <section class="term" id="liability">
+      <div class="marker"><span>12</span></div>
+      <div>
+        <h2>Limitation of Liability</h2>
+        <p>To the fullest extent permitted by applicable law, Farhana Afroz Foundation, its trustees, staff, and volunteers shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Site, your donation, or your participation in any Foundation program or event, except where such liability arises from our gross negligence or willful misconduct.</p>
+      </div>
+    </section>
+
+    <section class="term" id="indemnity">
+      <div class="marker"><span>13</span></div>
+      <div>
+        <h2>Indemnification</h2>
+        <p>You agree to indemnify and hold harmless the Foundation, its trustees, staff, and volunteers from any claim, loss, or demand, including reasonable legal fees, arising out of your violation of these Terms or your misuse of the Site.</p>
+      </div>
+    </section>
+
+    <section class="term" id="law">
+      <div class="marker"><span>14</span></div>
+      <div>
+        <h2>Governing Law &amp; Jurisdiction</h2>
+        <p>These Terms are governed by the laws of the People's Republic of Bangladesh. Any disputes arising out of or relating to these Terms or the Site shall be subject to the exclusive jurisdiction of the courts of Dhaka, Bangladesh.</p>
+      </div>
+    </section>
+
+    <section class="term" id="changes">
+      <div class="marker"><span>15</span></div>
+      <div>
+        <h2>Changes to These Terms</h2>
+        <p>We may revise these Terms from time to time to reflect changes in our programs, legal requirements, or operations. Updates take effect as soon as they are posted on this page, with the "Effective date" updated accordingly. Continued use of the Site after changes are posted constitutes your acceptance of the revised Terms.</p>
+      </div>
+    </section>
+
+    <section class="term" id="contact">
+      <div class="marker"><span>16</span></div>
+      <div>
+        <h2>Contact Us</h2>
+        <p>If you have questions about these Terms, please reach out to us:</p>
+        <ul>
+          <li>Email: <a href="mailto:farhanaafrozfoundation@gmail.com">farhanaafrozfoundation@gmail.com</a></li>
+          <li>Phone: <a href="tel:+8801712422246">+880 1712-422246</a></li>
+          <li>Location: Dhaka, Bangladesh</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <h3>Farhana Afroz Foundation</h3>
+      <p>Empowering communities through education, health, and meaningful action since 2009.</p>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="https://www.farhanaafrozfoundation.org/">Home</a></li>
+        <li><a href="https://www.farhanaafrozfoundation.org/about">About Us</a></li>
+        <li><a href="https://www.farhanaafrozfoundation.org/events">Events</a></li>
+        <li><a href="https://www.farhanaafrozfoundation.org/mission">Our Mission</a></li>
+        <li><a href="https://www.farhanaafrozfoundation.org/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <ul>
+        <li><a href="mailto:farhanaafrozfoundation@gmail.com">farhanaafrozfoundation@gmail.com</a></li>
+        <li><a href="tel:+8801712422246">+8801712422246</a></li>
+        <li>Dhaka, Bangladesh</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Farhana Afroz Foundation. All rights reserved.</span>
+    <span>Legal &amp; Policy — Terms &amp; Conditions</span>
+  </div>
+</footer>
+
+<script>
+  // Lightweight scroll-spy for the table of contents
+  (function(){
+    var links = document.querySelectorAll('.toc a');
+    var sections = document.querySelectorAll('section.term');
+    if(!('IntersectionObserver' in window) || !sections.length) return;
+    var map = {};
+    links.forEach(function(l){ map[l.getAttribute('href').slice(1)] = l; });
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var link = map[entry.target.id];
+        if(!link) return;
+        if(entry.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('active'); });
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-15% 0px -70% 0px' });
+    sections.forEach(function(s){ observer.observe(s); });
+  })();
+</script>
+
+</body>
+</html>
