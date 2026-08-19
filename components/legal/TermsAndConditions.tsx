@@ -22,6 +22,7 @@ export default function TermsAndConditions({
   email,
   phone,
 }: TermsAndConditionsProps) {
+  const [activeId, setActiveId] = useState<string>("");
   const resolvedEmail = email || DEFAULT_EMAIL;
   const resolvedPhone = phone || DEFAULT_PHONE;
   const telHref = `tel:${resolvedPhone.replace(/\s+/g, "")}`;
@@ -393,6 +394,28 @@ export default function TermsAndConditions({
     },
   ];
 
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-15% 0px -70% 0px" }
+    );
+
+    sections.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [sections]);
+
   return (
     <>
       {/* Hero */}
@@ -451,7 +474,11 @@ export default function TermsAndConditions({
                   <li key={s.id}>
                     <a
                       href={`#${s.id}`}
-                      className="block text-[13px] py-1 pl-3 border-l-2 border-sage-100 text-sage-600 hover:text-sage-900 hover:border-sage-400 transition-colors"
+                      className={`block text-[13px] py-1 pl-3 border-l-2 transition-colors ${
+                        activeId === s.id
+                          ? "border-sage-400 text-sage-900 font-semibold"
+                          : "border-sage-100 text-sage-600 hover:text-sage-900 hover:border-sage-400"
+                      }`}
                     >
                       {s.number} &middot; {s.title}
                     </a>
