@@ -1,26 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { HiX } from "react-icons/hi";
 import { useDonationModal } from "@/lib/context/DonationModalContext";
-import { cn } from "@/lib/utils";
+import { urlFor, getBlurUrl } from "@/sanity/lib/image";
+import type { DonationSettings } from "@/types";
+import { Smartphone, Scan, Wallet, ShieldCheck, ChevronDown } from "lucide-react";
 
-const PRESET_AMOUNTS = [500, 1000, 2000, 5000];
+// -----------------------------------------------------------------------------
+// NOTE: The SSLCommerz on-site payment form is TEMPORARILY DISABLED.
+// Clicking "Donate Now" now opens this modal with a QR code (managed in
+// Sanity → "Donation Settings" → "QR Code Image") so supporters can scan
+// and donate directly from their phone. To bring back the SSLCommerz flow,
+// restore the commented-out <form> block further down and the removed
+// states/handler at the top (see git history for the original file).
+// -----------------------------------------------------------------------------
 
-export default function DonationModal() {
+interface DonationModalProps {
+  donation?: DonationSettings | null;
+}
+
+const DEFAULT_STEPS = [
+  "Open your bKash app",
+  "Tap “Scan QR”",
+  "Enter your donation amount and confirm the payment",
+];
+
+export default function DonationModal({ donation }: DonationModalProps) {
   const { isOpen, closeModal } = useDonationModal();
-
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(1000);
-  const [customAmount, setCustomAmount] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const finalAmount = selectedAmount ?? (customAmount ? Number(customAmount) : 0);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -33,53 +42,12 @@ export default function DonationModal() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [closeModal]);
 
-  // Reset form when modal closes
-  useEffect(() => {
-    if (!isOpen) {
-      setSelectedAmount(1000);
-      setCustomAmount("");
-      setName("");
-      setEmail("");
-      setPhone("");
-      setAddress("");
-      setError("");
-      setLoading(false);
-    }
-  }, [isOpen]);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-
-    if (!finalAmount || finalAmount < 10) {
-      setError("Minimum donation amount is ৳10.");
-      return;
-    }
-    if (!name.trim() || !email.trim() || !phone.trim()) {
-      setError("Please fill in all required fields.");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await fetch("/api/payment/initiate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: finalAmount, name, email, phone, address, returnUrl: window.location.pathname }),
-      });
-      const data = await res.json();
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setError(data.error ?? "Something went wrong. Please try again.");
-        setLoading(false);
-      }
-    } catch {
-      setError("Network error. Please check your connection.");
-      setLoading(false);
-    }
-  }
+  const qrCode = donation?.qrCode;
+  const qrUrl = qrCode
+    ? urlFor(qrCode).width(512).format("auto").quality("auto:good").url()
+    : null;
+  const qrBlur = qrCode ? getBlurUrl(qrCode) : undefined;
+  const steps = donation?.rules?.length ? donation.rules : DEFAULT_STEPS;
 
   return (
     <LazyMotion features={domAnimation}>
@@ -98,14 +66,14 @@ export default function DonationModal() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 24 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="bg-[#faf6f0] w-full sm:max-w-md rounded-t-[20px] sm:rounded-[16px] max-h-[92dvh] overflow-y-auto shadow-2xl"
+              className="bg-[#faf6f0] w-full sm:max-w-2xl rounded-t-[20px] sm:rounded-[16px] max-h-[92dvh] overflow-y-auto shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
               <div className="sticky top-0 bg-[#faf6f0]/95 backdrop-blur-sm flex items-start justify-between px-6 pt-5 pb-4 border-b border-[#e8ddd0]">
                 <div>
                   <h2 className="text-lg font-bold text-sage-900">Make a Donation</h2>
-                  <p className="text-sm text-sage-600 mt-0.5">Secure payment via SSLCommerz</p>
+                  <p className="text-sm text-sage-600 mt-0.5">Scan the QR code to donate securely</p>
                 </div>
                 <button
                   type="button"
@@ -117,8 +85,84 @@ export default function DonationModal() {
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
-                {/* Amount selection */}
+              {/* QR code view */}
+              {qrUrl ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#e8ddd0]">
+                  {/* Left Column: QR code image — fills the whole left side */}
+                  <div className="relative w-full h-[320px] sm:h-full min-h-[320px] sm:min-h-[480px] bg-[#faf6f0] flex items-center justify-center overflow-hidden">
+                    <Image
+                      src={qrUrl}
+                      alt="Scan this QR code to donate to Farhana Afroz Foundation"
+                      fill
+                      priority
+                      placeholder={qrBlur ? "blur" : "empty"}
+                      blurDataURL={qrBlur}
+                      draggable={false}
+                      className="select-none object-contain"
+                    />
+                  </div>
+
+                  {/* Right Column: Heading + steps */}
+                  <div className="p-6 sm:p-8 flex flex-col justify-center bg-[#faf6f0]">
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-sage-900 text-center mb-6">
+                      {donation?.heading || "Donate via QR Code"}
+                    </h3>
+                    {donation?.description && (
+                      <p className="text-center -mt-4 mb-6 max-w-sm mx-auto text-sm text-sage-600 leading-relaxed">
+                        {donation.description}
+                      </p>
+                    )}
+
+                    {steps.length > 0 && (
+                      <div className="flex flex-col">
+                        {steps.map((step, i) => (
+                          <div key={i} className="flex flex-col">
+                            {i > 0 && (
+                              <div className="my-1 text-sage-400 flex justify-center">
+                                <ChevronDown className="w-5 h-5 animate-pulse-slow" />
+                              </div>
+                            )}
+                            <div className="flex items-center gap-4 rounded-[16px] border border-[#e8ddd0] bg-white p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                              <div className="w-12 h-12 rounded-full bg-[#133d2c] flex items-center justify-center shrink-0 shadow-inner">
+                                {i === 0 && <Smartphone className="w-5 h-5 text-white" />}
+                                {i === 1 && <Scan className="w-5 h-5 text-white" />}
+                                {i === 2 && <Wallet className="w-5 h-5 text-white" />}
+                                {i > 2 && <Wallet className="w-5 h-5 text-white" />}
+                              </div>
+                              <span className="text-sm sm:text-base font-semibold text-sage-900 leading-snug">
+                                {i + 1}. {step}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="mt-8 flex items-center justify-center gap-3 bg-sage-50/50 rounded-xl p-3 border border-sage-100/50">
+                      <div className="w-8 h-8 rounded-full border border-[#d12053]/80 bg-red-50/10 flex items-center justify-center shrink-0">
+                        <ShieldCheck className="w-4 h-4 text-[#d12053]" />
+                      </div>
+                      <p className="text-xs sm:text-sm font-semibold text-sage-800 leading-snug">
+                        Your donation is secure and greatly appreciated.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="mx-6 my-8 rounded-[16px] border border-dashed border-[#d8c6aa] bg-white px-6 py-10 text-center text-sm leading-relaxed text-sage-500">
+                  QR code is not set yet. Upload it in Sanity → Donation Settings
+                  → QR Code Image.
+                </div>
+              )}
+
+              {/* ===================================================================
+                  SSLCommerz on-site payment form — TEMPORARILY DISABLED.
+                  (Old flow: amount presets → donor details → /api/payment/initiate
+                  → SSLCommerz redirect.) Restore this block, plus the PRESET_AMOUNTS
+                  constant, the form states and handleSubmit() at the top of this
+                  file, to turn the SSLCommerz flow back on.
+                  <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
+                Amount selection
                 <div>
                   <label className="block text-xs font-semibold text-sage-600 uppercase tracking-wide mb-2.5">
                     Select Amount
@@ -154,7 +198,7 @@ export default function DonationModal() {
                   </div>
                 </div>
 
-                {/* Donor info */}
+                    Donor info
                 <div className="space-y-3">
                   <label className="block text-xs font-semibold text-sage-600 uppercase tracking-wide">
                     Your Details
@@ -198,7 +242,7 @@ export default function DonationModal() {
                   </p>
                 )}
 
-                {/* Submit */}
+                  Submit
                 <button
                   type="submit"
                   disabled={loading}
@@ -228,6 +272,7 @@ export default function DonationModal() {
                   Secured by SSLCommerz · Visa · Mastercard · bKash · Nagad
                 </p>
               </form>
+              ==================================================================== */}
             </m.div>
           </m.div>
         )}

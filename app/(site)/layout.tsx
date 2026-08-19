@@ -7,14 +7,17 @@ import DonationSuccessBanner from "@/components/ui/DonationSuccessBanner";
 import { DonationModalProvider } from "@/lib/context/DonationModalContext";
 import Providers from "@/components/providers/ProgressBarProvider";
 import ImageProtectionProvider from "@/components/providers/ImageProtectionProvider";
-import { getSiteSettings } from "@/sanity/lib/queries";
+import { getSiteSettings, getDonationSettings } from "@/sanity/lib/queries";
 
 export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const siteSettings = await getSiteSettings();
+  const [siteSettings, donationSettings] = await Promise.all([
+    getSiteSettings(),
+    getDonationSettings(),
+  ]);
 
   return (
     <Providers>
@@ -29,7 +32,7 @@ export default async function SiteLayout({
       </main>
       <Footer settings={siteSettings} />
       <FloatingActions whatsapp={siteSettings?.whatsappNumber} />
-      <DonationModal />
+      <DonationModal donation={donationSettings} />
       <Suspense><DonationSuccessBanner /></Suspense>
       </DonationModalProvider>
     </Providers>
