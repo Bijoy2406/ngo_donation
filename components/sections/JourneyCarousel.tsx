@@ -140,7 +140,7 @@ export default function JourneyCarousel({ items }: JourneyCarouselProps) {
                   {hasImage ? (
                     <Image
                       src={imageUrl}
-                      alt={item.heading}
+                      alt={item.heading || item.subheading || "Journey gallery image"}
                       fill
                       priority={i === 0}
                       placeholder={blurUrl ? "blur" : "empty"}
