@@ -126,7 +126,7 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <div
-            className="hidden md:flex items-center gap-7"
+            className="hidden lg:flex items-center gap-7"
             onMouseLeave={() => setHoveredHref(null)}
           >
             {navLinks.map((link) => {
@@ -188,7 +188,7 @@ export default function Navbar() {
           <button
             type="button"
             className={cn(
-              "md:hidden transition-colors duration-300 drop-shadow-[0_1px_2px_rgba(255,255,255,0.6)]",
+              "lg:hidden transition-colors duration-300 drop-shadow-[0_1px_2px_rgba(255,255,255,0.6)]",
               isScrolled ? "text-sage-900" : "text-sage-800"
             )}
             onClick={() => setIsMobileOpen(!isMobileOpen)}
@@ -207,7 +207,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ type: "spring", stiffness: 280, damping: 28, mass: 0.8 }}
-            className="md:hidden absolute top-[66px] left-3 right-3 rounded-[16px] border border-[#d8c6aa] bg-[#f7efe3]/95 shadow-[0_14px_28px_rgba(78,58,33,0.16)] backdrop-blur-md"
+            className="lg:hidden absolute top-[66px] left-3 right-3 rounded-[16px] border border-[#d8c6aa] bg-[#f7efe3]/95 shadow-[0_14px_28px_rgba(78,58,33,0.16)] backdrop-blur-md"
           >
             <div className="flex flex-col px-5 py-4 gap-4">
               {navLinks.map((link) => {
