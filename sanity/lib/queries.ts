@@ -170,8 +170,11 @@ export const getDonationSettings = cache(
         description,
         rules,
         bankName,
+        branchName,
         accountName,
         accountNumber,
+        swiftCode,
+        routingNumber,
         qrCode
       }`);
     },
